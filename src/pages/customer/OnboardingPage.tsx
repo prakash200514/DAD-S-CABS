@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Navigation, Compass, ShieldCheck, ArrowRight, Check } from 'lucide-react';
 
 export const OnboardingPage: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -9,37 +8,18 @@ export const OnboardingPage: React.FC = () => {
   const slides = [
     {
       title: 'Your Ride, Just a Tap Away',
-      description: 'Book a local auto or comfortable cab quickly and easily across Tamil Nadu.',
-      badge: 'Quick & Affordable',
-      visual: (
-        <div className="w-44 h-44 rounded-full bg-gradient-to-tr from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center p-6 shadow-glow-yellow">
-          <img
-            src="/icons/icon-auto.svg"
-            alt="Auto Booking"
-            className="w-full h-full object-contain filter drop-shadow-md animate-pulse"
-          />
-        </div>
-      ),
+      description: 'Book an auto or cab quickly and easily.',
+      image: '/assets/tn_auto_temple_hero.jpg',
     },
     {
       title: 'Track Your Ride Live',
-      description: 'Know where your driver is and when they will arrive with high-precision GPS tracking.',
-      badge: 'Real-time GPS',
-      visual: (
-        <div className="w-44 h-44 rounded-full bg-gradient-to-tr from-blue-500/20 to-blue-500/5 border border-blue-500/30 flex items-center justify-center p-6">
-          <Navigation className="w-20 h-20 text-blue-400 animate-spin duration-3000" />
-        </div>
-      ),
+      description: 'Know where your driver is and when they will arrive.',
+      image: '/assets/auto_rickshaw_card.jpg',
     },
     {
       title: 'Built for Tamil Nadu',
-      description: 'Reliable local travel designed specifically for our families, towns, and communities.',
-      badge: 'Local Pride',
-      visual: (
-        <div className="w-44 h-44 rounded-full bg-gradient-to-tr from-emerald-500/20 to-emerald-500/5 border border-emerald-500/30 flex items-center justify-center p-6">
-          <ShieldCheck className="w-20 h-20 text-emerald-400" />
-        </div>
-      ),
+      description: 'Reliable local travel designed for our communities.',
+      image: '/assets/tn_auto_temple_hero.jpg',
     },
   ];
 
@@ -47,82 +27,83 @@ export const OnboardingPage: React.FC = () => {
     if (currentSlide < slides.length - 1) {
       setCurrentSlide(currentSlide + 1);
     } else {
-      navigate('/auth');
+      navigate('/app');
     }
   };
 
   const handleSkip = () => {
-    navigate('/auth');
+    navigate('/app');
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col justify-between p-6 max-w-md mx-auto relative select-none">
-      {/* Top Header with Skip Button */}
-      <div className="flex items-center justify-between pt-4">
-        <span className="text-xs font-bold text-amber-500 tracking-wider uppercase">
-          Dad's Auto &amp; Cab
-        </span>
-
-        {currentSlide < slides.length - 1 && (
-          <button
-            onClick={handleSkip}
-            className="text-xs font-semibold text-slate-400 hover:text-white px-3 py-1 rounded-full bg-slate-900 border border-slate-800"
-          >
-            Skip
-          </button>
-        )}
-      </div>
-
-      {/* Slide Visual & Typography */}
-      <div className="flex flex-col items-center text-center my-auto py-8">
-        <div className="mb-8">{slides[currentSlide].visual}</div>
-
-        <span className="inline-block px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold mb-3">
-          {slides[currentSlide].badge}
-        </span>
-
-        <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight mb-3">
-          {slides[currentSlide].title}
-        </h2>
-
-        <p className="text-sm text-slate-400 max-w-xs leading-relaxed">
-          {slides[currentSlide].description}
-        </p>
-      </div>
-
-      {/* Bottom Controls & Dots */}
-      <div className="pb-6 space-y-6">
-        {/* Indicators */}
-        <div className="flex items-center justify-center gap-2">
-          {slides.map((_, i) => (
-            <div
-              key={i}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === currentSlide
-                  ? 'w-8 bg-amber-500'
-                  : 'w-2 bg-slate-800'
-              }`}
-            />
-          ))}
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-0 sm:p-4 select-none">
+      {/* Mobile Device Frame */}
+      <div className="w-full max-w-sm min-h-screen sm:min-h-[750px] bg-white rounded-none sm:rounded-[40px] shadow-2xl border-0 sm:border-8 border-slate-900 flex flex-col justify-between overflow-hidden relative">
+        {/* Top Mobile Status Bar (9:41) */}
+        <div className="absolute top-0 left-0 right-0 z-30 px-6 pt-3 flex items-center justify-between text-xs text-slate-800 font-semibold drop-shadow">
+          <span>9:41</span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px]">●●●●</span>
+            <span>WiFi</span>
+            <div className="w-5 h-2.5 rounded-sm border border-slate-800 p-0.5">
+              <div className="h-full bg-slate-800 rounded-xs w-3/4"></div>
+            </div>
+          </div>
         </div>
 
-        {/* Action Button */}
-        <button
-          onClick={handleNext}
-          className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-base shadow-glow-yellow flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
-        >
-          {currentSlide === slides.length - 1 ? (
-            <>
-              <span>Get Started</span>
-              <Check className="w-5 h-5 stroke-[3]" />
-            </>
-          ) : (
-            <>
-              <span>Next</span>
-              <ArrowRight className="w-5 h-5" />
-            </>
-          )}
-        </button>
+        {/* Upper Half: Photograph of Yellow Auto & Tamil Nadu Temple */}
+        <div className="w-full h-80 relative overflow-hidden flex-shrink-0">
+          <img
+            src={slides[currentSlide].image}
+            alt="Tamil Nadu Auto & Temple"
+            className="w-full h-full object-cover transition-all duration-500 transform hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-black/30"></div>
+        </div>
+
+        {/* Lower Half: Card with Title, Subtitle, Dots, Next & Skip */}
+        <div className="flex-1 flex flex-col justify-between p-6 sm:p-8 text-center bg-white">
+          <div className="space-y-3 pt-2">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-950 tracking-tight leading-snug">
+              {slides[currentSlide].title}
+            </h2>
+
+            <p className="text-sm text-slate-500 font-medium max-w-xs mx-auto">
+              {slides[currentSlide].description}
+            </p>
+          </div>
+
+          {/* Carousel Dots */}
+          <div className="flex items-center justify-center gap-2 py-4">
+            {slides.map((_, i) => (
+              <div
+                key={i}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === currentSlide
+                    ? 'w-6 bg-[#F5A623]'
+                    : 'w-2 bg-slate-300'
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Action Button: Solid Yellow Pill */}
+          <div className="space-y-4 pb-4">
+            <button
+              onClick={handleNext}
+              className="w-full py-4 rounded-full bg-[#F5A623] hover:bg-[#e59b20] active:scale-[0.98] text-slate-950 font-black text-base shadow-[0_4px_15px_rgba(245,166,35,0.4)] transition-all"
+            >
+              {currentSlide === slides.length - 1 ? 'Get Started' : 'Next'}
+            </button>
+
+            <button
+              onClick={handleSkip}
+              className="text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors"
+            >
+              Skip
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

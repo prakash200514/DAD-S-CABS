@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 180" width="100%" height="100%">
+  <!-- Top-down 3D Angled Auto Rickshaw Icon -->
+  <defs>
+    <filter id="carShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="2" dy="5" stdDeviation="4" flood-color="#000" flood-opacity="0.45"/>
+    </filter>
+    <linearGradient id="yellowRoof" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="60%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Drop Shadow -->
+  <ellipse cx="60" cy="98" rx="42" ry="70" fill="none"/>
+
+  <!-- Auto Rickshaw Body Silhouette -->
+  <!-- Rear Wheels -->
+  <rect x="12" y="110" width="10" height="26" rx="4" fill="#111827"/>
+  <rect x="98" y="110" width="10" height="26" rx="4" fill="#111827"/>
+
+  <!-- Front Single Wheel -->
+  <rect x="55" y="10" width="10" height="24" rx="4" fill="#111827"/>
+
+  <!-- Main Body Shell -->
+  <path d="M60 20 
+           L84 55 
+           L96 90 
+           L96 145 
+           C96 158, 86 165, 60 165 
+           C34 165, 24 158, 24 145 
+           L24 90 
+           L36 55 Z" 
+        fill="url(#yellowRoof)" filter="url(#carShadow)"/>
+
+  <!-- Black Canvas Roof Center -->
+  <path d="M60 38 
+           L80 65 
+           L86 95 
+           L86 142 
+           C86 150, 78 154, 60 154 
+           C42 154, 34 150, 34 142 
+           L34 95 
+           L40 65 Z" 
+        fill="#1E293B"/>
+
+  <!-- Windshield (Glass Tint) -->
+  <path d="M60 26 L76 52 L44 52 Z" fill="#93C5FD" opacity="0.8"/>
+
+  <!-- Passenger Rear Seat (Interior Glimpse) -->
+  <rect x="42" y="115" width="36" height="20" rx="4" fill="#334155"/>
+
+  <!-- Headlight Glow -->
+  <circle cx="60" cy="18" r="6" fill="#FEF08A"/>
+</svg>

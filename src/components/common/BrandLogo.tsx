@@ -10,21 +10,21 @@ interface BrandLogoProps {
 export const BrandLogo: React.FC<BrandLogoProps> = ({
   size = 'md',
   showTagline = true,
-  showBadge = false,
+  showBadge = true,
   className = '',
 }) => {
   const iconSizes = {
-    sm: 'w-7 h-7',
-    md: 'w-10 h-10',
-    lg: 'w-14 h-14',
-    hero: 'w-20 h-20',
+    sm: 'w-8 h-8',
+    md: 'w-11 h-11',
+    lg: 'w-16 h-16',
+    hero: 'w-24 h-24',
   };
 
   const titleSizes = {
-    sm: 'text-base font-bold',
-    md: 'text-xl font-extrabold tracking-tight',
-    lg: 'text-2xl sm:text-3xl font-extrabold tracking-tight',
-    hero: 'text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight',
+    sm: 'text-base font-black',
+    md: 'text-xl sm:text-2xl font-black tracking-tight',
+    lg: 'text-2xl sm:text-3xl font-black tracking-tight',
+    hero: 'text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight',
   };
 
   const taglineSizes = {
@@ -35,46 +35,62 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   };
 
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
-      {/* Brand Icon SVG Badge */}
-      <div
-        className={`${iconSizes[size]} relative flex-shrink-0 rounded-2xl bg-gradient-to-br from-brand-charcoal to-brand-dark p-1.5 border border-amber-500/40 shadow-glow-yellow flex items-center justify-center overflow-hidden group`}
-      >
-        <img
-          src="/icons/icon-auto.svg"
-          alt="Dad's Auto & Cab Logo"
-          className="w-full h-full object-contain filter drop-shadow transition-transform duration-300 group-hover:scale-110"
-        />
-      </div>
-
-      {/* Typography */}
-      <div className="flex flex-col">
-        <div className="flex items-center gap-2">
-          <span
-            className={`${titleSizes[size]} text-gray-900 dark:text-white flex items-center`}
-          >
-            Dad's <span className="text-amber-500 ml-1.5 font-black">Auto & Cab</span>
-          </span>
-
-          {showBadge && (
-            <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/20">
-              TN Only V1
-            </span>
-          )}
+    <div className={`flex items-center justify-between gap-4 ${className}`}>
+      {/* Brand Icon + Name */}
+      <div className="flex items-center gap-3">
+        {/* Curving Road + Auto Rickshaw Icon */}
+        <div
+          className={`${iconSizes[size]} relative flex-shrink-0 flex items-center justify-center`}
+        >
+          <img
+            src="/icons/icon-auto.svg"
+            alt="Dad's Auto & Cab"
+            className="w-full h-full object-contain filter drop-shadow-md"
+          />
         </div>
 
-        {showTagline && (
-          <p
-            className={`${taglineSizes[size]} text-gray-500 dark:text-gray-400 font-medium tracking-wide flex items-center gap-1.5 mt-0.5`}
-          >
-            <span>Safe Rides</span>
-            <span className="text-amber-500 font-bold">•</span>
-            <span>Local Routes</span>
-            <span className="text-amber-500 font-bold">•</span>
-            <span className="text-amber-500/90 font-semibold">Always With You</span>
-          </p>
-        )}
+        <div className="flex flex-col">
+          <div className="flex items-center">
+            <h1 className={`${titleSizes[size]} text-white leading-tight`}>
+              <span className="font-extrabold italic">Dad's</span>{' '}
+              <span className="text-[#F5A623] font-black">Auto &amp; Cab</span>
+            </h1>
+          </div>
+
+          {showTagline && (
+            <p
+              className={`${taglineSizes[size]} text-gray-300 font-medium tracking-wide flex items-center gap-1.5 mt-0.5`}
+            >
+              <span>Safe Rides</span>
+              <span className="text-[#F5A623] font-bold">•</span>
+              <span>Local Routes</span>
+              <span className="text-[#F5A623] font-bold">•</span>
+              <span className="text-[#F5A623] font-bold">Always With You</span>
+            </p>
+          )}
+        </div>
       </div>
+
+      {/* "Proudly Serving Tamil Nadu" Yellow Badge with TN Map Silhouette */}
+      {showBadge && (
+        <div className="hidden sm:flex items-center gap-2 bg-[#F5A623] text-slate-950 font-black px-3.5 py-1.5 rounded-2xl shadow-md border border-amber-300">
+          <div className="text-right">
+            <span className="block text-[9px] uppercase tracking-wider font-extrabold opacity-90 leading-tight">
+              Proudly Serving
+            </span>
+            <span className="block text-xs font-black tracking-tight leading-tight">
+              Tamil Nadu
+            </span>
+          </div>
+          <div className="w-5 h-6 text-slate-950 flex-shrink-0">
+            <img
+              src="/assets/tamil_nadu_map.svg"
+              alt="TN"
+              className="w-full h-full object-contain filter brightness-0"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
