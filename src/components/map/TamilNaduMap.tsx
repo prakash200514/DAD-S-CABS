@@ -147,28 +147,24 @@ export const TamilNaduMap: React.FC<TamilNaduMapProps> = ({
       markersRef.current['destination'] = dMarker;
     }
 
-    // 3. Driver Real-Time / Simulation Marker (Yellow Auto or Cab Icon)
+    // 3. Driver Real-Time / Simulation Marker (Angled Yellow Auto / Cab matching mockup)
     if (driverCoords) {
       const isAuto = vehicleType === 'AUTO';
       const driverIcon = L.divIcon({
         className: 'custom-map-marker',
         html: `
-          <div class="relative flex items-center justify-center -top-5 -left-5">
-            <span class="absolute w-10 h-10 rounded-full bg-amber-400/40 animate-pulse"></span>
-            <div class="w-10 h-10 rounded-full bg-amber-500 border-2 border-slate-900 shadow-xl flex items-center justify-center text-slate-950 font-bold transition-all duration-700 ease-out">
-              ${
-                isAuto
-                  ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>`
-                  : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 11.1 2 11.5 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>`
-              }
+          <div class="relative flex items-center justify-center -top-6 -left-6">
+            <span class="absolute w-12 h-12 rounded-full bg-amber-400/30 animate-ping pointer-events-none"></span>
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-500 border-2 border-slate-900 shadow-2xl flex items-center justify-center p-1.5 transition-transform duration-700 ease-out transform rotate-12">
+              <img src="/assets/topdown_auto.svg" alt="Auto" class="w-full h-full object-contain filter drop-shadow" />
             </div>
-            <div class="absolute -bottom-6 bg-amber-500 text-slate-950 font-bold text-[9px] px-1.5 py-0.5 rounded shadow">
+            <div class="absolute -bottom-5 bg-slate-900 text-[#F5A623] font-bold text-[8px] px-1.5 py-0.5 rounded shadow border border-amber-500/30 whitespace-nowrap">
               Ravi (TN 72)
             </div>
           </div>
         `,
-        iconSize: [40, 40],
-        iconAnchor: [20, 20],
+        iconSize: [48, 48],
+        iconAnchor: [24, 24],
       });
 
       const drvMarker = L.marker([driverCoords.lat, driverCoords.lng], {
@@ -177,22 +173,21 @@ export const TamilNaduMap: React.FC<TamilNaduMapProps> = ({
       markersRef.current['driver'] = drvMarker;
     }
 
-    // 4. Polyline Route
+    // 4. Polyline Route (Electric Blue with Dark casing matching mockup)
     if (polyline && polyline.length > 1) {
       const roadLine = L.polyline(polyline, {
-        color: '#F59E0B',
+        color: '#2563EB',
         weight: 6,
-        opacity: 0.9,
+        opacity: 0.95,
         lineCap: 'round',
         lineJoin: 'round',
-        dashArray: undefined,
       }).addTo(map);
 
       // Add a subtle darker outline for contrast
       const roadCasing = L.polyline(polyline, {
-        color: '#1E293B',
+        color: '#1E3A8A',
         weight: 9,
-        opacity: 0.4,
+        opacity: 0.5,
         lineCap: 'round',
         lineJoin: 'round',
       }).addTo(map);

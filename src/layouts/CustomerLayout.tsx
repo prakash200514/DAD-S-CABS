@@ -6,6 +6,7 @@ import { PwaInstallPrompt } from '../components/common/PwaInstallPrompt';
 import {
   Home,
   CalendarCheck2,
+  Wallet,
   User,
   WifiOff,
   Car,
@@ -55,7 +56,7 @@ export const CustomerLayout: React.FC = () => {
           className={({ isActive }) =>
             `flex flex-col items-center justify-center py-1 px-3 rounded-xl text-xs font-bold transition-all ${
               isActive
-                ? 'text-amber-500 scale-105'
+                ? 'text-[#F5A623] scale-105'
                 : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
             }`
           }
@@ -69,7 +70,21 @@ export const CustomerLayout: React.FC = () => {
           className={({ isActive }) =>
             `flex flex-col items-center justify-center py-1 px-3 rounded-xl text-xs font-bold transition-all ${
               isActive
-                ? 'text-amber-500 scale-105'
+                ? 'text-[#F5A623] scale-105'
+                : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+            }`
+          }
+        >
+          <Wallet className="w-5 h-5 mb-0.5" />
+          <span className="text-[10px]">Wallet</span>
+        </NavLink>
+
+        <NavLink
+          to="/app/profile"
+          className={({ isActive }) =>
+            `flex flex-col items-center justify-center py-1 px-3 rounded-xl text-xs font-bold transition-all ${
+              isActive
+                ? 'text-[#F5A623] scale-105'
                 : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
             }`
           }
