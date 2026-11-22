@@ -90,7 +90,7 @@ export const RideSelector: React.FC<RideSelectorProps> = ({
           </p>
         </div>
 
-        {/* CAB / TAXI CARD */}
+        {/* CAB / TAXI CARD (COMING SOON) */}
         <div
           onClick={() => onSelect('CAB')}
           className={`relative p-4 rounded-3xl cursor-pointer border-2 transition-all duration-200 select-none ${
@@ -99,11 +99,9 @@ export const RideSelector: React.FC<RideSelectorProps> = ({
               : 'border-gray-200 dark:border-slate-800 bg-white dark:bg-brand-surface hover:border-gray-300 dark:hover:border-slate-700'
           }`}
         >
-          {selectedType === 'CAB' && (
-            <span className="absolute -top-2.5 right-4 bg-amber-500 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow">
-              Comfort Prime
-            </span>
-          )}
+          <span className="absolute -top-2.5 right-4 bg-amber-500 text-slate-950 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full shadow">
+            Coming Soon
+          </span>
 
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
@@ -132,7 +130,7 @@ export const RideSelector: React.FC<RideSelectorProps> = ({
                 <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                   <span className="flex items-center gap-0.5">
                     <Clock className="w-3 h-3 text-blue-500" />
-                    5 mins away
+                    Launching Soon
                   </span>
                   <span>•</span>
                   <span className="flex items-center gap-0.5">
@@ -143,19 +141,19 @@ export const RideSelector: React.FC<RideSelectorProps> = ({
               </div>
             </div>
 
-            {/* Price */}
+            {/* Price Badge showing Coming Soon */}
             <div className="text-right">
-              <span className="text-lg font-black text-gray-900 dark:text-white">
-                ₹{cabFare.totalEstimatedFare}
+              <span className="inline-block px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-500 font-black text-xs">
+                Coming Soon
               </span>
-              <p className="text-[10px] text-gray-400">
-                ₹{cabFare.fareRangeMin}–₹{cabFare.fareRangeMax}
+              <p className="text-[10px] text-gray-400 mt-0.5">
+                Next Phase
               </p>
             </div>
           </div>
 
           <p className="text-xs text-gray-600 dark:text-gray-300 font-medium">
-            Spacious AC sedan, comfortable for long trips &amp; highway routes.
+            Spacious AC sedan • Launching soon across Tamil Nadu.
           </p>
         </div>
       </div>

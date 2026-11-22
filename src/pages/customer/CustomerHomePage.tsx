@@ -22,6 +22,8 @@ import {
   ChevronDown,
   Bot,
   AlertTriangle,
+  Car,
+  X,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -60,6 +62,8 @@ export const CustomerHomePage: React.FC = () => {
   >(null);
   const [isAiSheetOpen, setIsAiSheetOpen] = useState(false);
   const [completedBookingToReview, setCompletedBookingToReview] = useState<any>(null);
+
+  const [showCabComingSoon, setShowCabComingSoon] = useState(false);
 
   const handleOpenSearch = (type: 'pickup' | 'destination') => {
     setSearchModalType(type);
@@ -195,7 +199,7 @@ export const CustomerHomePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* AUTO vs CAB Toggle Pills */}
+              {/* AUTO vs CAB (COMING SOON) Toggle Pills */}
               <div className="pt-1 flex gap-2">
                 <button
                   type="button"
@@ -210,21 +214,21 @@ export const CustomerHomePage: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setVehicleType('CAB')}
-                  className={`flex-1 py-2.5 rounded-full text-xs font-black transition-all ${
-                    vehicleType === 'CAB'
-                      ? 'bg-[#F5A623] text-slate-950 shadow-md'
-                      : 'bg-white text-slate-600 border border-slate-200'
-                  }`}
+                  onClick={() => setShowCabComingSoon(true)}
+                  className="flex-1 py-2 rounded-full text-xs font-black transition-all bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 flex items-center justify-center gap-1.5 cursor-pointer relative"
+                  title="Prime Cab Rides Coming Soon"
                 >
-                  CAB
+                  <span>CAB</span>
+                  <span className="text-[9px] bg-amber-500/20 text-amber-800 font-extrabold px-1.5 py-0.5 rounded-full border border-amber-500/30 uppercase tracking-tighter">
+                    Coming Soon
+                  </span>
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Interactive Map Preview */}
-          <div className="flex-1 mx-5 my-2 rounded-2xl overflow-hidden border border-slate-200 shadow-inner relative min-h-[160px]">
+          {/* Interactive Map Preview (Fixed Explicit Height so Leaflet Renders Instantly) */}
+          <div className="mx-5 my-2 rounded-2xl overflow-hidden border border-slate-200 shadow-inner relative h-48 sm:h-52 w-[calc(100%-40px)] flex-shrink-0">
             <TamilNaduMap
               pickup={pickup}
               destination={destination}
@@ -534,6 +538,45 @@ export const CustomerHomePage: React.FC = () => {
         onClose={() => setIsAiSheetOpen(false)}
         onApplyIntent={() => setScreenStage('route')}
       />
+
+      {showCabComingSoon && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl border border-slate-100 text-center space-y-4">
+            <div className="w-16 h-16 rounded-full bg-blue-50 text-blue-600 mx-auto flex items-center justify-center shadow-inner">
+              <Car className="w-8 h-8" />
+            </div>
+
+            <div className="space-y-1.5">
+              <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 bg-amber-100 px-3 py-1 rounded-full border border-amber-200 inline-block">
+                Launching Soon in Tamil Nadu
+              </span>
+              <h3 className="text-xl font-black text-slate-900">
+                Prime Cab Rides
+              </h3>
+              <p className="text-xs text-slate-500 leading-relaxed max-w-xs mx-auto">
+                In Version 1, Dad's Auto &amp; Cab is proudly operating our verified local Auto Rickshaws. Air-conditioned sedan Cabs are coming soon to all Tamil Nadu districts!
+              </p>
+            </div>
+
+            <button
+              onClick={() => {
+                setVehicleType('AUTO');
+                setShowCabComingSoon(false);
+              }}
+              className="w-full py-3.5 rounded-full bg-[#F5A623] hover:bg-[#e59b20] text-slate-950 font-black text-xs shadow-md transition-all active:scale-95"
+            >
+              Book Local Auto (Active Now)
+            </button>
+
+            <button
+              onClick={() => setShowCabComingSoon(false)}
+              className="text-xs font-semibold text-slate-400 hover:text-slate-600 block mx-auto pt-1"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       {completedBookingToReview && (
         <RideCompletedModal

@@ -136,8 +136,13 @@ export const LandingPage: React.FC = () => {
               <Car className="w-full h-full" />
             </div>
             <div>
-              <h3 className="font-extrabold text-base text-white">Cab Rides</h3>
-              <p className="text-xs text-slate-400">Comfortable Travel</p>
+              <div className="flex items-center gap-2">
+                <h3 className="font-extrabold text-base text-white">Cab Rides</h3>
+                <span className="text-[9px] bg-amber-500/20 text-amber-400 font-extrabold px-1.5 py-0.5 rounded-full border border-amber-500/30 uppercase tracking-tighter">
+                  Coming Soon
+                </span>
+              </div>
+              <p className="text-xs text-slate-400">Comfortable Travel • Next Phase</p>
             </div>
           </div>
 

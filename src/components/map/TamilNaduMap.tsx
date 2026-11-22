@@ -77,6 +77,11 @@ export const TamilNaduMap: React.FC<TamilNaduMapProps> = ({
       });
 
       leafletMapRef.current = map;
+
+      // Force recalculation of map container dimensions
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 200);
     }
 
     return () => {
