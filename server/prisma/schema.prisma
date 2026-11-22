@@ -1,0 +1,204 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  CUSTOMER
+  DRIVER
+  ADMIN
+}
+
+enum VehicleType {
+  AUTO
+  CAB
+}
+
+enum VehicleStatus {
+  ACTIVE
+  INACTIVE
+  MAINTENANCE
+}
+
+enum BookingStatus {
+  PENDING
+  ACCEPTED
+  ARRIVING
+  STARTED
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  UPI
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id             String          @id @default(uuid())
+  name           String
+  phone          String          @unique
+  email          String?         @unique
+  role           Role            @default(CUSTOMER)
+  profileImage   String?         @map("profile_image")
+  createdAt      DateTime        @default(now()) @map("created_at")
+  driver         Driver?
+  bookings       Booking[]
+  savedLocations SavedLocation[]
+  notifications  Notification[]
+
+  @@map("users")
+}
+
+model Driver {
+  id            String    @id @default(uuid())
+  userId        String    @unique @map("user_id")
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicleId     String?   @unique @map("vehicle_id")
+  vehicle       Vehicle?  @relation(fields: [vehicleId], references: [id])
+  licenseNumber String    @unique @map("license_number")
+  rating        Float     @default(5.0)
+  onlineStatus  String    @default("OFFLINE") @map("online_status") // ONLINE, OFFLINE, BUSY
+  bookings      Booking[]
+  earnings      Earning[]
+
+  @@map("drivers")
+}
+
+model Vehicle {
+  id                 String        @id @default(uuid())
+  driverId           String?       @map("driver_id")
+  driver             Driver?
+  type               VehicleType
+  registrationNumber String        @unique @map("registration_number")
+  model              String
+  status             VehicleStatus @default(ACTIVE)
+  bookings           Booking[]
+
+  @@map("vehicles")
+}
+
+model Booking {
+  id              String        @id @default(uuid())
+  bookingCode     String        @unique @map("booking_code")
+  userId          String        @map("user_id")
+  user            User          @relation(fields: [userId], references: [id])
+  driverId        String?       @map("driver_id")
+  driver          Driver?       @relation(fields: [driverId], references: [id])
+  vehicleId       String?       @map("vehicle_id")
+  vehicle         Vehicle?      @relation(fields: [vehicleId], references: [id])
+  pickupAddress   String        @map("pickup_address")
+  pickupLat       Float         @map("pickup_lat")
+  pickupLng       Float         @map("pickup_lng")
+  destAddress     String        @map("dest_address")
+  destLat         Float         @map("dest_lat")
+  destLng         Float         @map("dest_lng")
+  distance        Float
+  estimatedTime   Int           @map("estimated_time") // in minutes
+  estimatedFare   Float         @map("estimated_fare")
+  finalFare       Float?        @map("final_fare")
+  paymentMethod   PaymentMethod @default(UPI) @map("payment_method")
+  status          BookingStatus @default(PENDING)
+  createdAt       DateTime      @default(now()) @map("created_at")
+  trip            Trip?
+  payment         Payment?
+  feedback        Feedback?
+  earnings        Earning[]
+
+  @@map("bookings")
+}
+
+model Trip {
+  id          String        @id @default(uuid())
+  bookingId   String        @unique @map("booking_id")
+  booking     Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  startedAt   DateTime?     @map("started_at")
+  completedAt DateTime?     @map("completed_at")
+  status      BookingStatus @default(ACCEPTED)
+
+  @@map("trips")
+}
+
+model Payment {
+  id        String        @id @default(uuid())
+  bookingId String        @unique @map("booking_id")
+  booking   Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  amount    Float
+  method    PaymentMethod
+  status    PaymentStatus @default(PENDING)
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  @@map("payments")
+}
+
+model Feedback {
+  id        String   @id @default(uuid())
+  bookingId String   @unique @map("booking_id")
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("feedback")
+}
+
+model Earning {
+  id        String   @id @default(uuid())
+  driverId  String   @map("driver_id")
+  driver    Driver   @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  bookingId String   @map("booking_id")
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  amount    Float
+  date      DateTime @default(now())
+
+  @@map("earnings")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("notifications")
+}
+
+model SavedLocation {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  address   String
+  lat       Float
+  lng       Float
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("saved_locations")
+}
+
+model FareRule {
+  id                  String      @id @default(uuid())
+  vehicleType         VehicleType @unique @map("vehicle_type")
+  baseFare            Float       @map("base_fare")
+  baseKm              Float       @default(1.5) @map("base_km")
+  perKmRate           Float       @map("per_km_rate")
+  waitingChargePerMin Float       @map("waiting_charge_per_min")
+  minFare             Float       @map("min_fare")
+  active              Boolean     @default(true)
+  updatedAt           DateTime    @updatedAt @map("updated_at")
+
+  @@map("fare_rules")
+}
