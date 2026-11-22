@@ -106,10 +106,10 @@ export const LandingPage: React.FC = () => {
         </div>
 
         {/* ---------------------------------------------------------------- */}
-        {/* 3 SERVICE CARDS ROW                                              */}
+        {/* 3 SERVICE CARDS ROW (100% AUTO CABS FOCUSED)                     */}
         {/* ---------------------------------------------------------------- */}
         <div id="services" className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-12">
-          {/* 1. Auto Rides */}
+          {/* 1. Local Auto Cabs */}
           <div
             onClick={() => navigate('/app')}
             className="bg-[#12161E] border border-slate-800 hover:border-[#F5A623]/60 p-5 rounded-2xl cursor-pointer transition-all flex items-center gap-4 group"
@@ -117,32 +117,27 @@ export const LandingPage: React.FC = () => {
             <div className="w-12 h-12 rounded-2xl bg-amber-500/15 flex items-center justify-center p-2 flex-shrink-0 group-hover:scale-110 transition-transform">
               <img
                 src="/icons/icon-auto.svg"
-                alt="Auto"
+                alt="Auto Cab"
                 className="w-full h-full object-contain"
               />
             </div>
             <div>
-              <h3 className="font-extrabold text-base text-white">Auto Rides</h3>
-              <p className="text-xs text-slate-400">Quick &amp; Affordable</p>
+              <h3 className="font-extrabold text-base text-white">Local Auto Cabs</h3>
+              <p className="text-xs text-slate-400">Quick, Safe &amp; Pocket-Friendly</p>
             </div>
           </div>
 
-          {/* 2. Cab Rides */}
+          {/* 2. Zero Surge Rates */}
           <div
             onClick={() => navigate('/app')}
             className="bg-[#12161E] border border-slate-800 hover:border-[#F5A623]/60 p-5 rounded-2xl cursor-pointer transition-all flex items-center gap-4 group"
           >
-            <div className="w-12 h-12 rounded-2xl bg-blue-500/15 text-blue-400 flex items-center justify-center p-2.5 flex-shrink-0 group-hover:scale-110 transition-transform">
-              <Car className="w-full h-full" />
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/15 text-[#F5A623] flex items-center justify-center p-2.5 flex-shrink-0 group-hover:scale-110 transition-transform">
+              <Zap className="w-6 h-6 text-[#F5A623]" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-extrabold text-base text-white">Cab Rides</h3>
-                <span className="text-[9px] bg-amber-500/20 text-amber-400 font-extrabold px-1.5 py-0.5 rounded-full border border-amber-500/30 uppercase tracking-tighter">
-                  Coming Soon
-                </span>
-              </div>
-              <p className="text-xs text-slate-400">Comfortable Travel • Next Phase</p>
+              <h3 className="font-extrabold text-base text-white">Zero Surge Pricing</h3>
+              <p className="text-xs text-slate-400">Fixed Government Meter Rates</p>
             </div>
           </div>
 
@@ -160,7 +155,7 @@ export const LandingPage: React.FC = () => {
             </div>
             <div>
               <h3 className="font-extrabold text-base text-white">Proudly Serving</h3>
-              <p className="text-xs text-[#F5A623] font-bold">Tamil Nadu</p>
+              <p className="text-xs text-[#F5A623] font-bold">Tamil Nadu Local Routes</p>
             </div>
           </div>
         </div>

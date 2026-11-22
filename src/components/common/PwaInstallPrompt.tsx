@@ -14,17 +14,10 @@ export const PwaInstallPrompt: React.FC = () => {
 
     window.addEventListener('beforeinstallprompt', handler);
 
-    // Show simulated promotion banner after 2 seconds if not installed
-    const timer = setTimeout(() => {
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-      if (!isStandalone) {
-        setShowPrompt(true);
-      }
-    }, 2500);
+
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handler);
-      clearTimeout(timer);
     };
   }, []);
 
@@ -68,8 +61,11 @@ export const PwaInstallPrompt: React.FC = () => {
         </div>
 
         <button
-          onClick={() => setShowPrompt(false)}
-          className="text-slate-400 hover:text-white p-1"
+          onClick={() => {
+            sessionStorage.setItem('pwa_prompt_dismissed', 'true');
+            setShowPrompt(false);
+          }}
+          className="text-slate-400 hover:text-white p-1 cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
@@ -98,15 +94,18 @@ export const PwaInstallPrompt: React.FC = () => {
       <div className="flex items-center gap-2 pt-1">
         <button
           onClick={handleInstall}
-          className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow flex items-center justify-center gap-1.5 transition-all"
+          className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow flex items-center justify-center gap-1.5 transition-all cursor-pointer"
         >
           <Download className="w-3.5 h-3.5 stroke-[2.5]" />
           <span>Install App Now</span>
         </button>
 
         <button
-          onClick={() => setShowPrompt(false)}
-          className="px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs font-semibold"
+          onClick={() => {
+            sessionStorage.setItem('pwa_prompt_dismissed', 'true');
+            setShowPrompt(false);
+          }}
+          className="px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs font-semibold cursor-pointer"
         >
           Later
         </button>
