@@ -1,6 +1,5 @@
 import React from 'react';
 import { Outlet, NavLink, useLocation } from 'react-router-dom';
-import { RoleSwitcherBanner } from '../components/common/RoleSwitcherBanner';
 import { useNetworkStatus } from '../hooks/useNetworkStatus';
 import { PwaInstallPrompt } from '../components/common/PwaInstallPrompt';
 import {
@@ -9,7 +8,6 @@ import {
   Wallet,
   User,
   WifiOff,
-  Car,
 } from 'lucide-react';
 
 export const CustomerLayout: React.FC = () => {
@@ -18,9 +16,6 @@ export const CustomerLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-brand-dark text-gray-900 dark:text-gray-100">
-      {/* Top Role Switcher Banner for live evaluation */}
-      <RoleSwitcherBanner />
-
       {/* Offline Alert Banner */}
       {!isOnline && (
         <div className="bg-red-600 text-white text-xs font-bold py-1.5 px-4 flex items-center justify-center gap-2 z-50">

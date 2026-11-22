@@ -151,7 +151,7 @@ export const BookingConfirmSheet: React.FC<BookingConfirmSheetProps> = ({
           <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin"></div>
         ) : (
           <>
-            <span>Confirm {vehicleType === 'AUTO' ? 'Auto Ride' : 'Cab Ride'}</span>
+            <span>Confirm Auto Ride</span>
             <ChevronRight className="w-5 h-5" />
           </>
         )}

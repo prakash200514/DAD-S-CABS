@@ -187,36 +187,30 @@ export const AuthPage: React.FC = () => {
         )}
 
         {/* Quick Demo Access Bar */}
-        <div className="pt-4 border-t border-slate-800/80 space-y-2">
-          <p className="text-[11px] font-bold text-slate-400 text-center uppercase tracking-wider">
-            ⚡ Quick Demo Testing Login
-          </p>
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              type="button"
-              onClick={() => handleFastLogin('CUSTOMER')}
-              className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[11px] text-slate-200 flex flex-col items-center gap-1"
-            >
-              <User className="w-4 h-4 text-amber-400" />
-              <span>Passenger</span>
-            </button>
+        <div className="pt-4 border-t border-slate-800/80 space-y-3">
+          <button
+            type="button"
+            onClick={() => handleFastLogin('CUSTOMER')}
+            className="w-full p-3 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-xs font-bold text-amber-400 flex items-center justify-center gap-2 transition-colors"
+          >
+            <User className="w-4 h-4" />
+            <span>⚡ Quick Demo Passenger Login (Karthik Raja)</span>
+          </button>
 
+          <div className="flex items-center justify-between text-xs text-slate-400 px-1 pt-1">
             <button
               type="button"
-              onClick={() => handleFastLogin('DRIVER')}
-              className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[11px] text-slate-200 flex flex-col items-center gap-1"
+              onClick={() => navigate('/driver/login')}
+              className="hover:text-amber-400 transition-colors"
             >
-              <Car className="w-4 h-4 text-emerald-400" />
-              <span>Ravi (Driver)</span>
+              Driver Partner Portal →
             </button>
-
             <button
               type="button"
-              onClick={() => handleFastLogin('ADMIN')}
-              className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[11px] text-slate-200 flex flex-col items-center gap-1"
+              onClick={() => navigate('/admin/login')}
+              className="hover:text-amber-400 transition-colors"
             >
-              <Shield className="w-4 h-4 text-blue-400" />
-              <span>Dad (Admin)</span>
+              Fleet Admin HQ →
             </button>
           </div>
         </div>

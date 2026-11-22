@@ -1,11 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import {
   Search,
   Bell,
   Calendar,
-  ShieldCheck,
-  ChevronDown,
+  LogOut,
 } from 'lucide-react';
 
 interface AdminTopbarProps {
@@ -13,7 +13,13 @@ interface AdminTopbarProps {
 }
 
 export const AdminTopbar: React.FC<AdminTopbarProps> = ({ onOpenAi }) => {
-  const { currentUser } = useAuthStore();
+  const { currentUser, logout } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/admin/login');
+  };
 
   return (
     <header className="h-16 bg-slate-900 border-b border-slate-800 px-6 flex items-center justify-between text-white flex-shrink-0">
@@ -62,6 +68,16 @@ export const AdminTopbar: React.FC<AdminTopbarProps> = ({ onOpenAi }) => {
               Owner / Admin
             </span>
           </div>
+
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="ml-2 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-red-500/20 text-slate-300 hover:text-red-400 border border-slate-700 hover:border-red-500/40 text-xs font-bold transition-colors cursor-pointer"
+            title="Sign out of Admin Portal"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Logout</span>
+          </button>
         </div>
       </div>
     </header>

@@ -117,11 +117,11 @@ export const AiBookingSheet: React.FC<AiBookingSheetProps> = ({
           <button
             type="button"
             onClick={() => {
-              setPrompt('Book a cab from Central Station to Koyambedu CMBT in Chennai.');
+              setPrompt('Book an auto from Central Station to Koyambedu CMBT in Chennai.');
             }}
             className="text-[10px] bg-gray-100 dark:bg-slate-800 px-2.5 py-1 rounded-full text-gray-600 dark:text-gray-300 hover:text-amber-500"
           >
-            Chennai Central ➔ Koyambedu Cab
+            Chennai Central ➔ Koyambedu Auto
           </button>
         </div>
 

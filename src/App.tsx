@@ -13,6 +13,7 @@ import { ProfilePage } from './pages/customer/ProfilePage';
 import { DriverLayout } from './layouts/DriverLayout';
 import { DriverDashboardPage } from './pages/driver/DriverDashboardPage';
 import { DriverEarningsPage } from './pages/driver/DriverEarningsPage';
+import { DriverLoginPage } from './pages/driver/DriverLoginPage';
 
 import { AdminLayout } from './layouts/AdminLayout';
 import { AdminOverviewPage } from './pages/admin/AdminOverviewPage';
@@ -21,6 +22,7 @@ import { AdminDriversPage } from './pages/admin/AdminDriversPage';
 import { AdminVehiclesPage } from './pages/admin/AdminVehiclesPage';
 import { AdminFareRulesPage } from './pages/admin/AdminFareRulesPage';
 import { AdminAnalyticsPage } from './pages/admin/AdminAnalyticsPage';
+import { AdminLoginPage } from './pages/admin/AdminLoginPage';
 
 export function App() {
   // Register Service Worker for PWA
@@ -50,12 +52,14 @@ export function App() {
         </Route>
 
         {/* Driver Portal */}
+        <Route path="/driver/login" element={<DriverLoginPage />} />
         <Route path="/driver" element={<DriverLayout />}>
           <Route index element={<DriverDashboardPage />} />
           <Route path="earnings" element={<DriverEarningsPage />} />
         </Route>
 
         {/* Admin / Dad Portal */}
+        <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminOverviewPage />} />
           <Route path="bookings" element={<AdminBookingsPage />} />

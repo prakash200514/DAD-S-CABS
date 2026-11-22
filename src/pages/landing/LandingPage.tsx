@@ -44,13 +44,27 @@ export const LandingPage: React.FC = () => {
             <a href="#contact" className="hover:text-[#F5A623] transition-colors">Contact</a>
           </nav>
 
-          {/* CTA: Book a Ride */}
-          <div className="flex items-center gap-3">
+          {/* Action Links & Book Ride CTA */}
+          <div className="flex items-center gap-2.5">
+            <button
+              onClick={() => navigate('/driver/login')}
+              className="hidden sm:inline-flex px-3.5 py-2 rounded-full border border-slate-700 hover:border-amber-500/60 bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white font-bold text-xs transition-colors items-center gap-1.5"
+            >
+              <span>Driver Partner</span>
+            </button>
+
+            <button
+              onClick={() => navigate('/admin/login')}
+              className="hidden md:inline-flex px-3.5 py-2 rounded-full border border-slate-700 hover:border-amber-500/60 bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white font-bold text-xs transition-colors items-center gap-1.5"
+            >
+              <span>Fleet Admin</span>
+            </button>
+
             <button
               onClick={() => navigate('/app')}
-              className="px-5 py-2.5 rounded-full bg-[#F5A623] hover:bg-[#e59b20] active:scale-95 text-slate-950 font-black text-xs sm:text-sm shadow-[0_4px_15px_rgba(245,166,35,0.4)] transition-all flex items-center gap-1.5"
+              className="px-5 py-2.5 rounded-full bg-[#F5A623] hover:bg-[#e59b20] active:scale-95 text-slate-950 font-black text-xs sm:text-sm shadow-[0_4px_15px_rgba(245,166,35,0.4)] transition-all flex items-center gap-1.5 cursor-pointer"
             >
-              <span>Book a Ride</span>
+              <span>Book an Auto</span>
               <ArrowRight className="w-4 h-4 stroke-[3]" />
             </button>
           </div>
@@ -199,6 +213,67 @@ export const LandingPage: React.FC = () => {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* SEPARATE APPLICATION PORTALS SECTION                                */}
+      {/* ------------------------------------------------------------------ */}
+      <section className="border-t border-slate-800 bg-[#090C11] py-10 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* 1. Customer PWA */}
+          <div className="bg-[#12161F] border border-slate-800 rounded-2xl p-5 space-y-3 flex flex-col justify-between">
+            <div className="space-y-1.5">
+              <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">For Passengers</span>
+              <h4 className="text-base font-bold text-white">Customer Auto Booking</h4>
+              <p className="text-xs text-slate-400">
+                Book local autos across Tamil Nadu instantly with zero surge pricing, verified drivers, and live GPS route tracking.
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('/app')}
+              className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-colors flex items-center justify-center gap-1.5"
+            >
+              <span>Launch Booking App</span>
+              <ArrowRight className="w-3.5 h-3.5 stroke-[3]" />
+            </button>
+          </div>
+
+          {/* 2. Driver Partner Portal */}
+          <div className="bg-[#12161F] border border-slate-800 rounded-2xl p-5 space-y-3 flex flex-col justify-between">
+            <div className="space-y-1.5">
+              <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">For Auto Drivers</span>
+              <h4 className="text-base font-bold text-white">Driver Partner App</h4>
+              <p className="text-xs text-slate-400">
+                Dedicated driver portal for registered auto drivers. Receive live passenger ride requests, turn on duty, and view daily earnings.
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('/driver/login')}
+              className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+            >
+              <span>Driver Partner Login</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          {/* 3. Central Fleet Admin HQ */}
+          <div className="bg-[#12161F] border border-slate-800 rounded-2xl p-5 space-y-3 flex flex-col justify-between">
+            <div className="space-y-1.5">
+              <span className="text-[10px] font-bold text-red-400 uppercase tracking-wider">Business Management</span>
+              <h4 className="text-base font-bold text-white">Dad's Fleet Admin HQ</h4>
+              <p className="text-xs text-slate-400">
+                Protected business command center for Dad and operational managers to control fleet drivers, manage fare rules, and view revenue analytics.
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('/admin/login')}
+              className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+            >
+              <span>Fleet Admin Login</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
       </section>
