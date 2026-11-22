@@ -4,26 +4,26 @@ import { useBookingStore } from '../../store/bookingStore';
 import { useLangStore } from '../../store/langStore';
 import { TamilNaduMap } from '../../components/map/TamilNaduMap';
 import { LocationSearchModal } from '../../components/customer/LocationSearchModal';
-import { RideSelector } from '../../components/customer/RideSelector';
-import { BookingConfirmSheet } from '../../components/customer/BookingConfirmSheet';
-import { LiveTrackerCard } from '../../components/customer/LiveTrackerCard';
 import { RideCompletedModal } from '../../components/customer/RideCompletedModal';
 import { AiBookingSheet } from '../../components/customer/AiBookingSheet';
 import { TNLocation } from '../../types';
 import {
   MapPin,
   Search,
-  ArrowUpDown,
-  Navigation,
-  Clock,
-  Sparkles,
-  Home,
-  Briefcase,
-  History,
-  Bot,
   Bell,
+  Clock,
+  Navigation,
+  Compass,
+  Phone,
+  MessageCircle,
+  Share2,
   CheckCircle2,
+  Check,
+  ChevronDown,
+  Bot,
+  AlertTriangle,
 } from 'lucide-react';
+import confetti from 'canvas-confetti';
 
 export const CustomerHomePage: React.FC = () => {
   const { currentUser } = useAuthStore();
@@ -43,21 +43,23 @@ export const CustomerHomePage: React.FC = () => {
     setPickup,
     setDestination,
     setVehicleType,
-    swapLocations,
+    createBooking,
     cancelActiveBooking,
     completeActiveBooking,
     rateBooking,
   } = useBookingStore();
 
-  // Modals & Sheets
+  // Screen Stages matching the mockup:
+  // 'home' | 'route' | 'confirmed' | 'tracking'
+  const [screenStage, setScreenStage] = useState<
+    'home' | 'route' | 'confirmed' | 'tracking'
+  >(activeBooking ? 'tracking' : 'home');
+
   const [searchModalType, setSearchModalType] = useState<
     'pickup' | 'destination' | null
   >(null);
-  const [isConfirmingBooking, setIsConfirmingBooking] = useState(false);
   const [isAiSheetOpen, setIsAiSheetOpen] = useState(false);
-  const [completedBookingToReview, setCompletedBookingToReview] = useState<any>(
-    null
-  );
+  const [completedBookingToReview, setCompletedBookingToReview] = useState<any>(null);
 
   const handleOpenSearch = (type: 'pickup' | 'destination') => {
     setSearchModalType(type);
@@ -71,166 +73,452 @@ export const CustomerHomePage: React.FC = () => {
     }
   };
 
+  const handleBookRideClick = () => {
+    setScreenStage('route');
+  };
+
+  const handleConfirmRideClick = () => {
+    createBooking();
+    setScreenStage('confirmed');
+
+    try {
+      confetti({
+        particleCount: 75,
+        spread: 80,
+        origin: { y: 0.4 },
+        colors: ['#F5A623', '#10B981', '#3B82F6', '#FFFFFF'],
+      });
+    } catch (e) {}
+  };
+
+  const handleTrackRideClick = () => {
+    setScreenStage('tracking');
+  };
+
+  const handleCallDriver = () => {
+    window.open('tel:+919443187654');
+  };
+
+  const handleWhatsAppDriver = () => {
+    const text = encodeURIComponent(
+      `Hello Ravi Kumar, I am waiting for ride #${activeBooking?.bookingCode || 'ATC1025'} at ${pickup.name}.`
+    );
+    window.open(`https://wa.me/919443187654?text=${text}`, '_blank');
+  };
+
   const handleSimulateFinishTrip = () => {
     if (activeBooking) {
       setCompletedBookingToReview(activeBooking);
       completeActiveBooking();
+      setScreenStage('home');
     }
   };
 
   return (
-    <div className="relative flex-1 flex flex-col h-[calc(100vh-85px)] overflow-hidden bg-gray-50 dark:bg-brand-dark">
-      {/* Interactive Tamil Nadu Vector / Google Map Layer */}
-      <div className="absolute inset-0 z-0">
-        <TamilNaduMap
-          pickup={pickup}
-          destination={destination}
-          polyline={routePolyline}
-          driverCoords={activeBooking ? driverCoords : undefined}
-          vehicleType={vehicleType}
-          interactive={true}
-        />
-      </div>
-
-      {/* Floating Top Bar (Avatar, Greeting, AI Trigger) */}
-      <div className="absolute top-4 left-3 right-3 z-20 flex items-center justify-between pointer-events-none">
-        {/* User Greeting Card */}
-        <div className="pointer-events-auto bg-white/95 dark:bg-brand-surface/95 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-gray-200/80 dark:border-slate-800 shadow-premium flex items-center gap-3">
-          <img
-            src={
-              currentUser?.avatar ||
-              'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80'
-            }
-            alt="Profile"
-            className="w-8 h-8 rounded-full object-cover border border-amber-500"
-          />
-          <div>
-            <p className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
-              {t('home.greeting')}
-            </p>
-            <h3 className="text-xs font-black text-gray-900 dark:text-white leading-tight">
-              {currentUser?.name || 'Karthik Raja'}
-            </h3>
+    <div className="relative flex-1 flex flex-col h-[calc(100vh-85px)] overflow-hidden bg-slate-100 select-none">
+      {/* ------------------------------------------------------------- */}
+      {/* 1. HOME SCREEN STATE (Exact match to Home Screen in image)     */}
+      {/* ------------------------------------------------------------- */}
+      {screenStage === 'home' && (
+        <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full bg-white sm:rounded-[36px] sm:my-3 sm:shadow-2xl overflow-hidden relative border-0 sm:border-8 border-slate-900">
+          {/* Top Status Bar (9:41) */}
+          <div className="px-5 pt-3 pb-2 flex items-center justify-between text-xs text-slate-800 font-semibold z-20">
+            <span>9:41</span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px]">●●●●</span>
+              <span>WiFi</span>
+              <div className="w-5 h-2.5 rounded-sm border border-slate-800 p-0.5">
+                <div className="h-full bg-slate-800 rounded-xs w-3/4"></div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* AI Assistant Quick Trigger */}
-        <div className="pointer-events-auto flex items-center gap-2">
-          <button
-            onClick={() => setIsAiSheetOpen(true)}
-            className="px-3.5 py-2 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-glow-yellow flex items-center gap-1.5 transition-all active:scale-95"
-            title="Book with Dad's AI Assistant"
-          >
-            <Bot className="w-4 h-4 stroke-[2.5]" />
-            <span className="hidden sm:inline">Dad's AI</span>
-          </button>
-        </div>
-      </div>
+          {/* User Greeting & Notification */}
+          <div className="px-5 py-2 flex items-center justify-between z-20">
+            <div className="flex items-center gap-2.5">
+              <img
+                src={currentUser?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80'}
+                alt="User"
+                className="w-10 h-10 rounded-full object-cover border border-[#F5A623]"
+              />
+              <div>
+                <span className="text-[11px] text-slate-400 font-medium block">Vanakkam!</span>
+                <h3 className="font-extrabold text-slate-900 text-sm">Where are you going?</h3>
+              </div>
+            </div>
 
-      {/* Bottom Sheet Drawer for Booking or Live Tracking */}
-      <div className="mt-auto z-20 p-3 sm:p-5 max-w-xl mx-auto w-full pointer-events-none">
-        <div className="pointer-events-auto">
-          {activeBooking ? (
-            /* ACTIVE RIDE LIVE TRACKING CARD */
-            <LiveTrackerCard
-              booking={activeBooking}
-              onCancel={() => cancelActiveBooking()}
-              onCompleteDemoTrip={handleSimulateFinishTrip}
-            />
-          ) : isConfirmingBooking ? (
-            /* CONFIRM BOOKING BOTTOM SHEET */
-            <BookingConfirmSheet
-              onConfirmed={() => {
-                setIsConfirmingBooking(false);
-              }}
-            />
-          ) : (
-            /* PRIMARY RIDE PLANNING CARD */
-            <div className="bg-white/95 dark:bg-brand-surface/95 backdrop-blur-xl rounded-3xl p-5 shadow-2xl border border-gray-200/80 dark:border-slate-800 space-y-4">
-              {/* Heading */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg font-black text-gray-900 dark:text-white tracking-tight">
-                    {t('home.whereAreYouGoing')}
-                  </h2>
-                  <p className="text-[11px] text-amber-500 font-semibold">
-                    Local Auto &amp; Cab Booking • Tamil Nadu
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsAiSheetOpen(true)}
+                className="w-8 h-8 rounded-full bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-slate-950 flex items-center justify-center transition-colors"
+                title="AI Booking"
+              >
+                <Bot className="w-4 h-4" />
+              </button>
+              <div className="relative w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-700">
+                <Bell className="w-4 h-4" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#F5A623]"></span>
+              </div>
+            </div>
+          </div>
+
+          {/* Location Input Card + Auto/Cab Toggle */}
+          <div className="px-5 py-2 z-20">
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 space-y-3 shadow-xs">
+              {/* Pickup field */}
+              <div
+                onClick={() => handleOpenSearch('pickup')}
+                className="flex items-center gap-3 cursor-pointer group"
+              >
+                <div className="w-3 h-3 rounded-full bg-emerald-500 flex-shrink-0"></div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-[10px] text-slate-400 font-medium block">Pickup Location</span>
+                  <p className="text-xs font-bold text-slate-900 truncate">
+                    {pickup.name.includes('Palayamkottai') ? 'Current Location' : pickup.name}
                   </p>
                 </div>
-                <div className="flex items-center gap-1 text-[11px] font-bold text-gray-500 bg-gray-100 dark:bg-slate-800 px-2.5 py-1 rounded-full">
-                  <Clock className="w-3.5 h-3.5 text-amber-500" />
-                  <span>{durationMin} mins</span>
+              </div>
+
+              <div className="border-t border-slate-200 mx-1"></div>
+
+              {/* Destination field */}
+              <div
+                onClick={() => handleOpenSearch('destination')}
+                className="flex items-center gap-3 cursor-pointer group"
+              >
+                <div className="w-3 h-3 rounded-full border-2 border-slate-400 flex-shrink-0"></div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-[10px] text-slate-400 font-medium block">Destination</span>
+                  <p className="text-xs font-bold text-slate-900 truncate">
+                    {destination.name || 'Enter destination'}
+                  </p>
                 </div>
               </div>
 
-              {/* Pickup & Destination Interactive Fields */}
-              <div className="relative bg-gray-50 dark:bg-slate-900/80 p-3 rounded-2xl border border-gray-100 dark:border-slate-800 space-y-2">
-                {/* Pickup Field */}
-                <div
-                  onClick={() => handleOpenSearch('pickup')}
-                  className="flex items-center gap-3 p-2 rounded-xl cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-800/80 transition-colors"
-                >
-                  <span className="w-3 h-3 rounded-full bg-emerald-500 flex-shrink-0"></span>
-                  <div className="flex-1 min-w-0">
-                    <span className="text-[10px] text-gray-400 font-medium block">
-                      {t('home.pickup')}
-                    </span>
-                    <p className="text-xs font-bold text-gray-900 dark:text-white truncate">
-                      {pickup.name}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="border-t border-gray-200/60 dark:border-slate-800/80 mx-2"></div>
-
-                {/* Destination Field */}
-                <div
-                  onClick={() => handleOpenSearch('destination')}
-                  className="flex items-center gap-3 p-2 rounded-xl cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-800/80 transition-colors"
-                >
-                  <span className="w-3 h-3 rounded-full bg-red-500 flex-shrink-0"></span>
-                  <div className="flex-1 min-w-0">
-                    <span className="text-[10px] text-gray-400 font-medium block">
-                      {t('home.destination')}
-                    </span>
-                    <p className="text-xs font-bold text-gray-900 dark:text-white truncate">
-                      {destination.name}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Swap locations button */}
+              {/* AUTO vs CAB Toggle Pills */}
+              <div className="pt-1 flex gap-2">
                 <button
                   type="button"
-                  onClick={swapLocations}
-                  title="Swap Locations"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow flex items-center justify-center text-gray-600 dark:text-slate-300 hover:text-amber-500 transition-transform active:scale-90"
+                  onClick={() => setVehicleType('AUTO')}
+                  className={`flex-1 py-2.5 rounded-full text-xs font-black transition-all ${
+                    vehicleType === 'AUTO'
+                      ? 'bg-[#F5A623] text-slate-950 shadow-md'
+                      : 'bg-white text-slate-600 border border-slate-200'
+                  }`}
                 >
-                  <ArrowUpDown className="w-3.5 h-3.5" />
+                  AUTO
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setVehicleType('CAB')}
+                  className={`flex-1 py-2.5 rounded-full text-xs font-black transition-all ${
+                    vehicleType === 'CAB'
+                      ? 'bg-[#F5A623] text-slate-950 shadow-md'
+                      : 'bg-white text-slate-600 border border-slate-200'
+                  }`}
+                >
+                  CAB
                 </button>
               </div>
+            </div>
+          </div>
 
-              {/* Vehicle Selection: Auto vs Cab */}
-              <RideSelector
-                selectedType={vehicleType}
-                onSelect={setVehicleType}
-                distanceKm={distanceKm}
-                durationMin={durationMin}
-              />
+          {/* Interactive Map Preview */}
+          <div className="flex-1 mx-5 my-2 rounded-2xl overflow-hidden border border-slate-200 shadow-inner relative min-h-[160px]">
+            <TamilNaduMap
+              pickup={pickup}
+              destination={destination}
+              polyline={routePolyline}
+              vehicleType={vehicleType}
+              interactive={true}
+              showCenterControls={false}
+            />
+          </div>
 
-              {/* Primary Action Button */}
+          {/* Mini Metric Pills: 6.8 km Distance, 15 min Time, ₹120-150 Fare */}
+          <div className="px-5 py-1.5 flex items-center justify-between text-center">
+            <div className="flex-1 p-2 bg-slate-50 border border-slate-200 rounded-xl mx-1">
+              <span className="text-xs font-black text-slate-900 block">{distanceKm} km</span>
+              <span className="text-[10px] text-slate-400">Distance</span>
+            </div>
+            <div className="flex-1 p-2 bg-slate-50 border border-slate-200 rounded-xl mx-1">
+              <span className="text-xs font-black text-slate-900 block">{durationMin} min</span>
+              <span className="text-[10px] text-slate-400">Time</span>
+            </div>
+            <div className="flex-1 p-2 bg-slate-50 border border-slate-200 rounded-xl mx-1">
+              <span className="text-xs font-black text-slate-900 block">₹{fareMin}-{fareMax}</span>
+              <span className="text-[10px] text-slate-400">Fare</span>
+            </div>
+          </div>
+
+          {/* Primary CTA Button: Book Ride */}
+          <div className="p-5 pt-2">
+            <button
+              onClick={handleBookRideClick}
+              className="w-full py-4 rounded-full bg-[#F5A623] hover:bg-[#e59b20] active:scale-[0.98] text-slate-950 font-black text-sm shadow-[0_4px_15px_rgba(245,166,35,0.4)] transition-all"
+            >
+              Book Ride
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 2. MAP & ROUTE SCREEN (Exact match to Map & Route in image)    */}
+      {/* ------------------------------------------------------------- */}
+      {screenStage === 'route' && (
+        <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full bg-slate-900 sm:rounded-[36px] sm:my-3 sm:shadow-2xl overflow-hidden relative border-0 sm:border-8 border-slate-900">
+          {/* Full Screen Interactive Map Layer */}
+          <div className="absolute inset-0 z-0">
+            <TamilNaduMap
+              pickup={pickup}
+              destination={destination}
+              polyline={routePolyline}
+              vehicleType={vehicleType}
+              interactive={true}
+            />
+          </div>
+
+          {/* Floating Top Route Pill: Green Pin, Tirunelveli Junction, 6.8 km • 15 min */}
+          <div className="p-4 z-20">
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl p-3 shadow-lg border border-slate-200 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center flex-shrink-0">
+                <MapPin className="w-4 h-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="font-extrabold text-slate-900 text-sm truncate">
+                  {destination.name}
+                </h4>
+                <p className="text-xs text-slate-500">
+                  {distanceKm} km • {durationMin} min
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Floating Route Card: Auto • ₹120-150 + Confirm Ride */}
+          <div className="p-4 z-20 space-y-3">
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl p-3 shadow-lg border border-slate-200 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="font-extrabold text-slate-900 text-sm">
+                  {vehicleType === 'AUTO' ? 'Auto' : 'Cab'} • ₹{fareMin}-{fareMax}
+                </span>
+              </div>
+              <ChevronDown className="w-4 h-4 text-slate-500" />
+            </div>
+
+            <button
+              onClick={handleConfirmRideClick}
+              className="w-full py-4 rounded-full bg-[#F5A623] hover:bg-[#e59b20] active:scale-[0.98] text-slate-950 font-black text-sm shadow-[0_4px_15px_rgba(245,166,35,0.4)] transition-all"
+            >
+              Confirm Ride
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 3. BOOKING CONFIRMED (Exact match to Booking Confirmed in image)*/}
+      {/* ------------------------------------------------------------- */}
+      {screenStage === 'confirmed' && (
+        <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full bg-[#080B0F] text-white sm:rounded-[36px] sm:my-3 sm:shadow-2xl overflow-hidden relative border-0 sm:border-8 border-slate-900 select-none">
+          {/* Top Status Bar (9:41) */}
+          <div className="px-5 pt-3 pb-2 flex items-center justify-between text-xs text-slate-400 font-semibold z-20">
+            <span>9:41</span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px]">●●●●</span>
+              <span>WiFi</span>
+              <div className="w-5 h-2.5 rounded-sm border border-slate-400 p-0.5">
+                <div className="h-full bg-white rounded-xs w-3/4"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Center Confirmation with Green Check Circle & ID */}
+          <div className="flex flex-col items-center text-center my-auto px-6 space-y-4 z-20 animate-in zoom-in-95 duration-300">
+            {/* Green Check Circle */}
+            <div className="w-20 h-20 rounded-full bg-[#10B981] text-white flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.45)]">
+              <Check className="w-10 h-10 stroke-[3.5]" />
+            </div>
+
+            <div className="space-y-1">
+              <h2 className="text-2xl font-black text-white">Ride Confirmed!</h2>
+              <p className="text-xs text-slate-400">
+                Booking ID <span className="text-[#F5A623] font-bold">#ATC1025</span>
+              </p>
+            </div>
+
+            {/* Driver Card with White Background */}
+            <div className="w-full bg-white rounded-3xl p-5 shadow-2xl text-slate-900 text-left space-y-4 mt-2">
+              <div className="flex items-center gap-3">
+                <img
+                  src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=160&q=80"
+                  alt="Ravi Kumar"
+                  className="w-14 h-14 rounded-full object-cover border-2 border-[#F5A623]"
+                />
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-extrabold text-base text-slate-900">Ravi Kumar</h4>
+                    <span className="text-xs text-[#F5A623] font-bold">★ 4.8</span>
+                  </div>
+                  <p className="text-xs text-slate-500 font-medium">Auto • TN 72 AB 4587</p>
+                  <p className="text-xs text-slate-900 font-bold mt-0.5">ETA: 5 min</p>
+                </div>
+              </div>
+
+              {/* Call & WhatsApp Pill Buttons */}
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                <button
+                  onClick={handleCallDriver}
+                  className="py-2.5 rounded-full border border-blue-500 bg-blue-50 text-blue-600 font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-blue-100 transition-colors"
+                >
+                  <Phone className="w-3.5 h-3.5 text-blue-500" />
+                  <span>Call</span>
+                </button>
+
+                <button
+                  onClick={handleWhatsAppDriver}
+                  className="py-2.5 rounded-full border border-emerald-500 bg-emerald-50 text-emerald-600 font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-emerald-100 transition-colors"
+                >
+                  <MessageCircle className="w-3.5 h-3.5 text-emerald-500" />
+                  <span>WhatsApp</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Track Ride Primary Solid Yellow Button */}
+            <div className="w-full pt-2">
               <button
-                onClick={() => setIsConfirmingBooking(true)}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-base shadow-glow-yellow flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+                onClick={handleTrackRideClick}
+                className="w-full py-4 rounded-full bg-[#F5A623] hover:bg-[#e59b20] active:scale-[0.98] text-slate-950 font-black text-sm shadow-[0_4px_15px_rgba(245,166,35,0.4)] transition-all"
               >
-                <span>Book {vehicleType === 'AUTO' ? 'Local Auto' : 'Prime Cab'}</span>
-                <span className="text-slate-900">•</span>
-                <span>₹{estimatedFare}</span>
+                Track Ride
               </button>
             </div>
-          )}
+          </div>
+
+          {/* Bottom Temple Gopurams Silhouette */}
+          <div className="w-full h-20 text-[#F5A623]/60 flex items-end justify-center overflow-hidden z-10">
+            <img
+              src="/assets/temple_skyline.svg"
+              alt="Temple Skyline"
+              className="w-full h-auto object-cover"
+            />
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 4. LIVE TRACKING SCREEN (Exact match to Live Tracking in image)*/}
+      {/* ------------------------------------------------------------- */}
+      {screenStage === 'tracking' && (
+        <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full bg-slate-900 sm:rounded-[36px] sm:my-3 sm:shadow-2xl overflow-hidden relative border-0 sm:border-8 border-slate-900">
+          {/* Full Screen Map Layer */}
+          <div className="absolute inset-0 z-0">
+            <TamilNaduMap
+              pickup={pickup}
+              destination={destination}
+              polyline={routePolyline}
+              driverCoords={driverCoords}
+              vehicleType={vehicleType}
+              interactive={true}
+            />
+          </div>
+
+          {/* Top Floating Pill: Green Dot, Driver Arriving, ETA: 5 min */}
+          <div className="p-4 z-20">
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl px-4 py-2.5 shadow-lg border border-slate-200 flex items-center gap-3 w-fit mx-auto">
+              <span className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+              <div>
+                <span className="font-extrabold text-slate-900 text-xs block leading-tight">
+                  Driver Arriving
+                </span>
+                <span className="text-[11px] text-slate-500 font-semibold block leading-tight">
+                  ETA: 5 min
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Floating Drawer: Step Timeline + Driver Bar */}
+          <div className="p-4 z-20 space-y-3">
+            <div className="bg-white/95 backdrop-blur-md rounded-3xl p-4 shadow-2xl border border-slate-200 space-y-4">
+              {/* Step Timeline Indicator: Assigned --- Arriving --- On Trip --- Reached */}
+              <div className="flex items-center justify-between px-2 pt-1">
+                {[
+                  { name: 'Assigned', state: 'done' },
+                  { name: 'Arriving', state: 'active' },
+                  { name: 'On Trip', state: 'pending' },
+                  { name: 'Reached', state: 'pending' },
+                ].map((step, idx) => (
+                  <div key={idx} className="flex flex-col items-center">
+                    <div
+                      className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                        step.state === 'done' || step.state === 'active'
+                          ? 'bg-blue-600 text-white shadow-sm'
+                          : 'bg-slate-200 text-slate-400'
+                      }`}
+                    >
+                      {step.state === 'done' || step.state === 'active' ? (
+                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      ) : (
+                        <span>●</span>
+                      )}
+                    </div>
+                    <span className="text-[10px] font-semibold text-slate-600 mt-1">
+                      {step.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Driver Bar: Photo, Ravi Kumar ★ 4.8, TN 72 AB 4587, Circular Phone, Circular WhatsApp */}
+              <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                <div className="flex items-center gap-3">
+                  <img
+                    src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=160&q=80"
+                    alt="Ravi Kumar"
+                    className="w-11 h-11 rounded-full object-cover border-2 border-[#F5A623]"
+                  />
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h4 className="font-extrabold text-sm text-slate-900">Ravi Kumar</h4>
+                      <span className="text-xs text-[#F5A623] font-bold">★ 4.8</span>
+                    </div>
+                    <span className="text-xs text-slate-500 font-mono">TN 72 AB 4587</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleCallDriver}
+                    className="w-9 h-9 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center shadow transition-colors"
+                    title="Call Ravi"
+                  >
+                    <Phone className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={handleWhatsAppDriver}
+                    className="w-9 h-9 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center shadow transition-colors"
+                    title="WhatsApp Ravi"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Complete demo trip button */}
+              <button
+                onClick={handleSimulateFinishTrip}
+                className="w-full py-2.5 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow"
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                <span>Simulate Trip Finish (Arrived at Junction)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modals */}
       <LocationSearchModal
@@ -244,9 +532,7 @@ export const CustomerHomePage: React.FC = () => {
       <AiBookingSheet
         isOpen={isAiSheetOpen}
         onClose={() => setIsAiSheetOpen(false)}
-        onApplyIntent={() => {
-          // Handled inside AI Sheet
-        }}
+        onApplyIntent={() => setScreenStage('route')}
       />
 
       {completedBookingToReview && (
