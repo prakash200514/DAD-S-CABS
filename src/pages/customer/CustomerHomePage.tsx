@@ -63,7 +63,7 @@ export const CustomerHomePage: React.FC = () => {
   const [isAiSheetOpen, setIsAiSheetOpen] = useState(false);
   const [completedBookingToReview, setCompletedBookingToReview] = useState<any>(null);
 
-  const [showCabComingSoon, setShowCabComingSoon] = useState(false);
+  const [cabNotified, setCabNotified] = useState(false);
 
   const handleOpenSearch = (type: 'pickup' | 'destination') => {
     setSearchModalType(type);
@@ -166,104 +166,218 @@ export const CustomerHomePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Location Input Card + Auto/Cab Toggle */}
-          <div className="px-5 py-2 z-20">
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 space-y-3 shadow-xs">
-              {/* Pickup field */}
-              <div
-                onClick={() => handleOpenSearch('pickup')}
-                className="flex items-center gap-3 cursor-pointer group"
+          {/* Vehicle Type Switcher: AUTO (Active) vs CAB (Coming Soon) */}
+          <div className="px-5 pt-1 pb-1 z-20">
+            <div className="bg-slate-100 p-1.5 rounded-2xl flex gap-1.5 border border-slate-200 shadow-2xs">
+              <button
+                type="button"
+                onClick={() => setVehicleType('AUTO')}
+                className={`flex-1 py-2.5 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                  vehicleType === 'AUTO'
+                    ? 'bg-[#F5A623] text-slate-950 shadow-md ring-2 ring-[#F5A623]/25'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                }`}
               >
-                <div className="w-3 h-3 rounded-full bg-emerald-500 flex-shrink-0"></div>
-                <div className="flex-1 min-w-0">
-                  <span className="text-[10px] text-slate-400 font-medium block">Pickup Location</span>
-                  <p className="text-xs font-bold text-slate-900 truncate">
-                    {pickup.name.includes('Palayamkottai') ? 'Current Location' : pickup.name}
-                  </p>
+                <span className="text-sm">🛺</span>
+                <span>AUTO</span>
+                <span className="text-[9px] bg-emerald-600 text-white font-extrabold px-1.5 py-0.5 rounded-full uppercase tracking-tight">
+                  Active
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setVehicleType('CAB')}
+                className={`flex-1 py-2.5 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  vehicleType === 'CAB'
+                    ? 'bg-slate-900 text-white shadow-md ring-2 ring-slate-900/30'
+                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/60'
+                }`}
+              >
+                <span className="text-sm">🚕</span>
+                <span>CAB</span>
+                <span
+                  className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-full uppercase tracking-tighter ${
+                    vehicleType === 'CAB'
+                      ? 'bg-[#F5A623] text-slate-950'
+                      : 'bg-amber-500/20 text-amber-800'
+                  }`}
+                >
+                  Coming Soon
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Conditional Content: AUTO (Booking UI) vs CAB (Coming Soon Only) */}
+          {vehicleType === 'AUTO' ? (
+            <>
+              {/* Location Input Card */}
+              <div className="px-5 py-1 z-20">
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 space-y-3 shadow-xs">
+                  {/* Pickup field */}
+                  <div
+                    onClick={() => handleOpenSearch('pickup')}
+                    className="flex items-center gap-3 cursor-pointer group hover:bg-white p-1 rounded-xl transition-colors"
+                  >
+                    <div className="w-3 h-3 rounded-full bg-emerald-500 flex-shrink-0 ring-4 ring-emerald-100"></div>
+                    <div className="flex-1 min-w-0">
+                      <span className="text-[10px] text-slate-400 font-medium block">Pickup Location</span>
+                      <p className="text-xs font-bold text-slate-900 truncate">
+                        {pickup.name.includes('Palayamkottai') ? 'Current Location' : pickup.name}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-slate-200 mx-1"></div>
+
+                  {/* Destination field */}
+                  <div
+                    onClick={() => handleOpenSearch('destination')}
+                    className="flex items-center gap-3 cursor-pointer group hover:bg-white p-1 rounded-xl transition-colors"
+                  >
+                    <div className="w-3 h-3 rounded-full border-2 border-slate-400 flex-shrink-0 ring-4 ring-slate-100"></div>
+                    <div className="flex-1 min-w-0">
+                      <span className="text-[10px] text-slate-400 font-medium block">Destination</span>
+                      <p className="text-xs font-bold text-slate-900 truncate">
+                        {destination.name || 'Enter destination'}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="border-t border-slate-200 mx-1"></div>
+              {/* Interactive Map Preview (Fixed Explicit Height, clean OSM tiles) */}
+              <div className="mx-5 my-2 rounded-2xl overflow-hidden border border-slate-200 shadow-inner relative h-48 sm:h-52 w-[calc(100%-40px)] flex-shrink-0">
+                <TamilNaduMap
+                  pickup={pickup}
+                  destination={destination}
+                  polyline={routePolyline}
+                  vehicleType={vehicleType}
+                  interactive={true}
+                  showCenterControls={false}
+                />
+              </div>
 
-              {/* Destination field */}
-              <div
-                onClick={() => handleOpenSearch('destination')}
-                className="flex items-center gap-3 cursor-pointer group"
-              >
-                <div className="w-3 h-3 rounded-full border-2 border-slate-400 flex-shrink-0"></div>
-                <div className="flex-1 min-w-0">
-                  <span className="text-[10px] text-slate-400 font-medium block">Destination</span>
-                  <p className="text-xs font-bold text-slate-900 truncate">
-                    {destination.name || 'Enter destination'}
-                  </p>
+              {/* Mini Metric Pills: 6.8 km Distance, 15 min Time, ₹119-144 Fare */}
+              <div className="px-5 py-1 flex items-center justify-between text-center">
+                <div className="flex-1 p-2 bg-slate-50 border border-slate-200 rounded-xl mx-1">
+                  <span className="text-xs font-black text-slate-900 block">{distanceKm} km</span>
+                  <span className="text-[10px] text-slate-400">Distance</span>
+                </div>
+                <div className="flex-1 p-2 bg-slate-50 border border-slate-200 rounded-xl mx-1">
+                  <span className="text-xs font-black text-slate-900 block">{durationMin} min</span>
+                  <span className="text-[10px] text-slate-400">Time</span>
+                </div>
+                <div className="flex-1 p-2 bg-slate-50 border border-slate-200 rounded-xl mx-1">
+                  <span className="text-xs font-black text-slate-900 block">₹{fareMin}-{fareMax}</span>
+                  <span className="text-[10px] text-slate-400">Fare</span>
                 </div>
               </div>
 
-              {/* AUTO vs CAB (COMING SOON) Toggle Pills */}
-              <div className="pt-1 flex gap-2">
+              {/* Primary CTA Button: Book Ride */}
+              <div className="p-5 pt-2">
+                <button
+                  onClick={handleBookRideClick}
+                  className="w-full py-4 rounded-full bg-[#F5A623] hover:bg-[#e59b20] active:scale-[0.98] text-slate-950 font-black text-sm shadow-[0_4px_15px_rgba(245,166,35,0.4)] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>Book Auto Ride</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </>
+          ) : (
+            /* ============================================================= */
+            /* CAB IS SELECTED: ONLY SHOWS COMING SOON (NO MAP, NO BOOKING)  */
+            /* ============================================================= */
+            <div className="flex-1 flex flex-col justify-between px-5 py-2 animate-in fade-in zoom-in-95 duration-200 overflow-y-auto">
+              <div className="bg-gradient-to-b from-slate-50 via-white to-amber-50/40 border border-slate-200 rounded-3xl p-5 text-center space-y-3.5 my-auto shadow-xs">
+                {/* Cab Visual Icon */}
+                <div className="relative mx-auto w-16 h-16">
+                  <div className="w-16 h-16 rounded-2xl bg-slate-900 text-[#F5A623] flex items-center justify-center shadow-lg transform -rotate-2">
+                    <Car className="w-8 h-8" />
+                  </div>
+                  <span className="absolute -top-1.5 -right-2 bg-[#F5A623] text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow border-2 border-white uppercase tracking-wider">
+                    Phase 2
+                  </span>
+                </div>
+
+                <div className="space-y-1.5">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-900 border border-amber-500/30 text-[11px] font-black uppercase tracking-wide">
+                    <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                    Coming Soon in Tamil Nadu
+                  </div>
+
+                  <h3 className="text-xl font-black text-slate-900 tracking-tight">
+                    Prime Cab Rides
+                  </h3>
+
+                  <p className="text-xs text-slate-600 leading-relaxed max-w-xs mx-auto">
+                    In Version 1, Dad's Auto &amp; Cab operates 100% verified Local Auto Rickshaws. Air-conditioned sedan &amp; SUV Cabs are launching in Phase 2 across Tamil Nadu!
+                  </p>
+                </div>
+
+                {/* Feature sneak peeks */}
+                <div className="grid grid-cols-2 gap-2 text-left pt-1">
+                  <div className="p-2.5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+                    <span className="text-base block mb-0.5">❄️</span>
+                    <span className="text-[11px] font-extrabold text-slate-900 block">100% AC Cabs</span>
+                    <span className="text-[10px] text-slate-400">Sedans &amp; SUVs</span>
+                  </div>
+                  <div className="p-2.5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+                    <span className="text-base block mb-0.5">🛣️</span>
+                    <span className="text-[11px] font-extrabold text-slate-900 block">Outstation Trips</span>
+                    <span className="text-[10px] text-slate-400">All 38 TN Districts</span>
+                  </div>
+                  <div className="p-2.5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+                    <span className="text-base block mb-0.5">🏷️</span>
+                    <span className="text-[11px] font-extrabold text-slate-900 block">Zero Surge</span>
+                    <span className="text-[10px] text-slate-400">Fixed Per-KM Rates</span>
+                  </div>
+                  <div className="p-2.5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+                    <span className="text-base block mb-0.5">🛡️</span>
+                    <span className="text-[11px] font-extrabold text-slate-900 block">Verified Drivers</span>
+                    <span className="text-[10px] text-slate-400">Dad's Trusted Fleet</span>
+                  </div>
+                </div>
+
+                {/* Early Access Alert Button */}
+                <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-3 flex items-center justify-between">
+                  <div className="text-left">
+                    <span className="text-[11px] font-bold text-slate-800 block">Get Early Access Alert</span>
+                    <span className="text-[10px] text-slate-500">Alert me when Cabs launch</span>
+                  </div>
+                  {cabNotified ? (
+                    <span className="text-[10px] font-black text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full border border-emerald-300 flex items-center gap-1">
+                      <Check className="w-3 h-3 stroke-[3]" /> Notified
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setCabNotified(true)}
+                      className="text-[10px] font-black text-slate-950 bg-[#F5A623] hover:bg-[#e59b20] px-3 py-1.5 rounded-full shadow-sm transition-transform active:scale-95 cursor-pointer"
+                    >
+                      Notify Me
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Primary CTA: Switch back to Auto Rickshaw */}
+              <div className="pt-2 pb-2">
                 <button
                   type="button"
                   onClick={() => setVehicleType('AUTO')}
-                  className={`flex-1 py-2.5 rounded-full text-xs font-black transition-all ${
-                    vehicleType === 'AUTO'
-                      ? 'bg-[#F5A623] text-slate-950 shadow-md'
-                      : 'bg-white text-slate-600 border border-slate-200'
-                  }`}
+                  className="w-full py-4 rounded-full bg-[#F5A623] hover:bg-[#e59b20] active:scale-[0.98] text-slate-950 font-black text-sm shadow-[0_4px_15px_rgba(245,166,35,0.4)] transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  AUTO
+                  <span>🛺</span>
+                  <span>Switch to Auto Rickshaw (Book Now)</span>
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setShowCabComingSoon(true)}
-                  className="flex-1 py-2 rounded-full text-xs font-black transition-all bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 flex items-center justify-center gap-1.5 cursor-pointer relative"
-                  title="Prime Cab Rides Coming Soon"
-                >
-                  <span>CAB</span>
-                  <span className="text-[9px] bg-amber-500/20 text-amber-800 font-extrabold px-1.5 py-0.5 rounded-full border border-amber-500/30 uppercase tracking-tighter">
-                    Coming Soon
-                  </span>
-                </button>
+                <p className="text-[11px] text-center text-slate-400 mt-2 font-medium">
+                  Local auto rickshaws are active right now with instant pickup
+                </p>
               </div>
             </div>
-          </div>
-
-          {/* Interactive Map Preview (Fixed Explicit Height so Leaflet Renders Instantly) */}
-          <div className="mx-5 my-2 rounded-2xl overflow-hidden border border-slate-200 shadow-inner relative h-48 sm:h-52 w-[calc(100%-40px)] flex-shrink-0">
-            <TamilNaduMap
-              pickup={pickup}
-              destination={destination}
-              polyline={routePolyline}
-              vehicleType={vehicleType}
-              interactive={true}
-              showCenterControls={false}
-            />
-          </div>
-
-          {/* Mini Metric Pills: 6.8 km Distance, 15 min Time, ₹120-150 Fare */}
-          <div className="px-5 py-1.5 flex items-center justify-between text-center">
-            <div className="flex-1 p-2 bg-slate-50 border border-slate-200 rounded-xl mx-1">
-              <span className="text-xs font-black text-slate-900 block">{distanceKm} km</span>
-              <span className="text-[10px] text-slate-400">Distance</span>
-            </div>
-            <div className="flex-1 p-2 bg-slate-50 border border-slate-200 rounded-xl mx-1">
-              <span className="text-xs font-black text-slate-900 block">{durationMin} min</span>
-              <span className="text-[10px] text-slate-400">Time</span>
-            </div>
-            <div className="flex-1 p-2 bg-slate-50 border border-slate-200 rounded-xl mx-1">
-              <span className="text-xs font-black text-slate-900 block">₹{fareMin}-{fareMax}</span>
-              <span className="text-[10px] text-slate-400">Fare</span>
-            </div>
-          </div>
-
-          {/* Primary CTA Button: Book Ride */}
-          <div className="p-5 pt-2">
-            <button
-              onClick={handleBookRideClick}
-              className="w-full py-4 rounded-full bg-[#F5A623] hover:bg-[#e59b20] active:scale-[0.98] text-slate-950 font-black text-sm shadow-[0_4px_15px_rgba(245,166,35,0.4)] transition-all"
-            >
-              Book Ride
-            </button>
-          </div>
+          )}
         </div>
       )}
 
@@ -538,45 +652,6 @@ export const CustomerHomePage: React.FC = () => {
         onClose={() => setIsAiSheetOpen(false)}
         onApplyIntent={() => setScreenStage('route')}
       />
-
-      {showCabComingSoon && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl border border-slate-100 text-center space-y-4">
-            <div className="w-16 h-16 rounded-full bg-blue-50 text-blue-600 mx-auto flex items-center justify-center shadow-inner">
-              <Car className="w-8 h-8" />
-            </div>
-
-            <div className="space-y-1.5">
-              <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 bg-amber-100 px-3 py-1 rounded-full border border-amber-200 inline-block">
-                Launching Soon in Tamil Nadu
-              </span>
-              <h3 className="text-xl font-black text-slate-900">
-                Prime Cab Rides
-              </h3>
-              <p className="text-xs text-slate-500 leading-relaxed max-w-xs mx-auto">
-                In Version 1, Dad's Auto &amp; Cab is proudly operating our verified local Auto Rickshaws. Air-conditioned sedan Cabs are coming soon to all Tamil Nadu districts!
-              </p>
-            </div>
-
-            <button
-              onClick={() => {
-                setVehicleType('AUTO');
-                setShowCabComingSoon(false);
-              }}
-              className="w-full py-3.5 rounded-full bg-[#F5A623] hover:bg-[#e59b20] text-slate-950 font-black text-xs shadow-md transition-all active:scale-95"
-            >
-              Book Local Auto (Active Now)
-            </button>
-
-            <button
-              onClick={() => setShowCabComingSoon(false)}
-              className="text-xs font-semibold text-slate-400 hover:text-slate-600 block mx-auto pt-1"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
 
       {completedBookingToReview && (
         <RideCompletedModal

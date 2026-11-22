@@ -56,15 +56,11 @@ export const TamilNaduMap: React.FC<TamilNaduMapProps> = ({
         doubleClickZoom: interactive,
       });
 
-      // Sleek Dark CartoDB / OSM tiles for premium look
-      L.tileLayer(
-        'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-        {
-          attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-          maxZoom: 19,
-          subdomains: 'abcd',
-        }
-      ).addTo(map);
+      // Clean OpenStreetMap tiles without watermarks
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19,
+      }).addTo(map);
 
       if (interactive) {
         L.control.zoom({ position: 'bottomright' }).addTo(map);
