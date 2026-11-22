@@ -1,0 +1,46 @@
+{
+  "name": "Dad's Auto & Cab - Tamil Nadu",
+  "short_name": "Dad's Cab",
+  "description": "Safe Rides • Local Routes • Always With You. Local Auto & Cab booking in Tamil Nadu.",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B0F14",
+  "theme_color": "#F59E0B",
+  "lang": "en-IN",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/icons/icon-auto.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["travel", "transportation", "lifestyle"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Book Auto",
+      "short_name": "Auto",
+      "description": "Book a local Auto in Tamil Nadu",
+      "url": "/?ride=auto",
+      "icons": [{ "src": "/icons/icon-auto.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Book Cab",
+      "short_name": "Cab",
+      "description": "Book a comfortable Cab in Tamil Nadu",
+      "url": "/?ride=cab",
+      "icons": [{ "src": "/icons/icon-auto.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Driver Mode",
+      "short_name": "Driver",
+      "description": "Driver portal and active rides",
+      "url": "/driver",
+      "icons": [{ "src": "/icons/icon-auto.svg", "sizes": "192x192" }]
+    }
+  ]
+}
