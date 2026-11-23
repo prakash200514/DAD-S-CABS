@@ -215,7 +215,7 @@ interface AdminState {
   // Actions
   toggleDriverOnline: (driverId: string) => void;
   updateDriver: (driverId: string, data: Partial<Driver>) => void;
-  addDriver: (driver: Omit<Driver, 'id'>) => void;
+  addDriver: (driver: Driver | Omit<Driver, 'id'>) => void;
   updateFareRule: (type: 'AUTO' | 'CAB', updates: Partial<FareRule>) => void;
   updateVehicleStatus: (
     vehicleId: string,
@@ -250,13 +250,14 @@ export const useAdminStore = create<AdminState>((set) => ({
   },
 
   addDriver: (newDriverData) => {
-    const id = `drv-${Date.now()}`;
+    const id = 'id' in newDriverData && newDriverData.id ? newDriverData.id : `drv-${Date.now()}`;
     const newDriver: Driver = {
       ...newDriverData,
       id,
-    };
+    } as Driver;
     set((state) => ({
       drivers: [newDriver, ...state.drivers],
+      vehicles: [newDriver.vehicle, ...state.vehicles],
     }));
   },
 

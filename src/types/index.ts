@@ -23,6 +23,48 @@ export interface Vehicle {
   status: 'ACTIVE' | 'INACTIVE' | 'MAINTENANCE';
 }
 
+export interface DriverBioData {
+  dob?: string;
+  bloodGroup?: string;
+  fatherOrSpouseName?: string;
+  address?: string;
+  district?: string;
+  pincode?: string;
+  experienceYears?: number;
+  aadhaarNumber?: string;
+  badgeNumber?: string;
+  bioPhotoUrl?: string;
+}
+
+export interface DriverLegalDocuments {
+  licenseDocName?: string;
+  licenseDocUrl?: string;
+  licenseExpiry?: string;
+  aadhaarDocName?: string;
+  aadhaarDocUrl?: string;
+  rcBookDocName?: string;
+  rcBookDocUrl?: string;
+  permitDocName?: string;
+  permitDocUrl?: string;
+  permitNumber?: string;
+  insuranceDocName?: string;
+  insuranceDocUrl?: string;
+  insuranceExpiry?: string;
+  insurancePolicyNumber?: string;
+  fitnessExpiry?: string;
+  verificationStatus?: 'VERIFIED' | 'PENDING' | 'REJECTED';
+}
+
+export interface AutoRickshawSpecs {
+  make?: string;
+  model?: string;
+  fuelType?: 'LPG' | 'CNG' | 'PETROL' | 'ELECTRIC';
+  year?: number;
+  seatingCapacity?: number;
+  color?: string;
+  photoUrl?: string;
+}
+
 export interface Driver {
   id: string;
   userId: string;
@@ -45,6 +87,9 @@ export interface Driver {
     address: string;
     heading?: number;
   };
+  bioData?: DriverBioData;
+  legalDocs?: DriverLegalDocuments;
+  autoSpecs?: AutoRickshawSpecs;
 }
 
 export interface TNLocation {

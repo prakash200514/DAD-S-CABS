@@ -11,6 +11,7 @@ import {
   MapPin,
   ChevronRight,
   AlertCircle,
+  Sparkles,
 } from 'lucide-react';
 
 export const DriverLoginPage: React.FC = () => {
@@ -76,17 +77,44 @@ export const DriverLoginPage: React.FC = () => {
           </div>
         </div>
 
-        <Link
-          to="/"
-          className="text-xs text-slate-400 hover:text-white transition-colors py-1 px-3 rounded-full border border-slate-800 hover:border-slate-700 bg-slate-900"
-        >
-          Customer Home
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            to="/driver/register"
+            className="text-xs text-amber-400 hover:text-white transition-colors py-1.5 px-3 rounded-full border border-amber-500/30 hover:border-amber-400 bg-amber-500/10 font-bold flex items-center gap-1"
+          >
+            <span>Register</span>
+            <ArrowRight className="w-3 h-3 stroke-[3]" />
+          </Link>
+          <Link
+            to="/"
+            className="text-xs text-slate-400 hover:text-white transition-colors py-1.5 px-3 rounded-full border border-slate-800 hover:border-slate-700 bg-slate-900"
+          >
+            Home
+          </Link>
+        </div>
       </header>
 
       {/* Main Login Card */}
       <main className="max-w-md mx-auto w-full my-auto py-6">
-        <div className="bg-[#121721] border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+        <div className="bg-[#121721] border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5">
+          {/* Top Switcher Tabs: Sign In / Register */}
+          <div className="grid grid-cols-2 p-1 bg-slate-900 border border-slate-800 rounded-2xl text-xs font-bold">
+            <button
+              type="button"
+              className="py-2.5 rounded-xl bg-amber-500 text-slate-950 shadow-md flex items-center justify-center gap-1.5"
+            >
+              <span>Driver Sign In</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/driver/register')}
+              className="py-2.5 rounded-xl text-slate-400 hover:text-white transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <span>New Registration</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            </button>
+          </div>
+
           <div className="space-y-1.5 text-center">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[11px] font-black uppercase tracking-wider">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -131,7 +159,7 @@ export const DriverLoginPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Vehicle Number */}
+            {/* Vehicle Registration field */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-300 block">
                 Auto Rickshaw Registration Number
@@ -139,32 +167,37 @@ export const DriverLoginPage: React.FC = () => {
               <input
                 type="text"
                 value={vehicleReg}
-                onChange={(e) => setVehicleReg(e.target.value.toUpperCase())}
+                onChange={(e) => {
+                  setVehicleReg(e.target.value.toUpperCase());
+                  setError('');
+                }}
                 placeholder="TN 72 AB 4587"
-                className="w-full px-4 py-3 rounded-xl bg-[#1A2230] border border-slate-700 text-sm text-white placeholder-slate-500 font-semibold uppercase tracking-wider focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] outline-none transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-[#1A2230] border border-slate-700 text-sm text-[#F5A623] font-bold font-mono focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] outline-none uppercase transition-all"
               />
             </div>
 
-            {/* Security PIN */}
+            {/* PIN field */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-slate-300 block">
+                <label className="text-xs font-bold text-slate-300">
                   Driver Security PIN
                 </label>
-                <span className="text-[11px] text-amber-400 font-medium">Default: 4587</span>
+                <span className="text-[10px] text-amber-400 font-mono">
+                  Default: 4587
+                </span>
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="password"
-                  maxLength={4}
+                  maxLength={6}
                   value={pin}
                   onChange={(e) => {
-                    setPin(e.target.value.replace(/\D/g, ''));
+                    setPin(e.target.value);
                     setError('');
                   }}
                   placeholder="••••"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#1A2230] border border-slate-700 text-sm text-white placeholder-slate-500 font-semibold tracking-widest focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] outline-none transition-all"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#1A2230] border border-slate-700 text-sm text-white placeholder-slate-500 tracking-widest focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] outline-none transition-all font-mono"
                 />
               </div>
             </div>
@@ -185,6 +218,24 @@ export const DriverLoginPage: React.FC = () => {
             </button>
           </form>
 
+          {/* New Driver Registration Callout Box */}
+          <div className="p-4 rounded-2xl bg-amber-500/10 border-2 border-amber-500/30 text-center space-y-2">
+            <div className="flex items-center justify-center gap-1.5 text-xs font-black text-amber-400 uppercase tracking-wide">
+              <Sparkles className="w-4 h-4" />
+              <span>New Auto Rickshaw Driver?</span>
+            </div>
+            <p className="text-[11px] text-slate-300 leading-relaxed">
+              Register detailed Auto Rickshaw specs, upload Driver Bio Data &amp; Govt Legal Documents (DL/Aadhaar/RC), and verify mobile via SMS OTP.
+            </p>
+            <button
+              type="button"
+              onClick={() => navigate('/driver/register')}
+              className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <span>Register Auto &amp; Join Dad's Fleet →</span>
+            </button>
+          </div>
+
           {/* Quick Pilot Driver Login */}
           <div className="pt-2 border-t border-slate-800/80">
             <button
@@ -197,7 +248,7 @@ export const DriverLoginPage: React.FC = () => {
           </div>
 
           {/* Benefits Grid */}
-          <div className="grid grid-cols-2 gap-2 pt-2 text-[11px] text-slate-400">
+          <div className="grid grid-cols-2 gap-2 pt-1 text-[11px] text-slate-400">
             <div className="p-2.5 rounded-xl bg-[#171E2B] border border-slate-800/80 flex items-center gap-2">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
               <span>Direct Passenger Cash/UPI</span>

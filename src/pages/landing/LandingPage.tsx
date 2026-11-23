@@ -249,13 +249,22 @@ export const LandingPage: React.FC = () => {
                 Dedicated driver portal for registered auto drivers. Receive live passenger ride requests, turn on duty, and view daily earnings.
               </p>
             </div>
-            <button
-              onClick={() => navigate('/driver/login')}
-              className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
-            >
-              <span>Driver Partner Login</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            <div className="flex flex-col sm:flex-row items-center gap-2">
+              <button
+                onClick={() => navigate('/driver/login')}
+                className="flex-1 w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+              >
+                <span>Driver Login</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => navigate('/driver/register')}
+                className="flex-1 w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-colors flex items-center justify-center gap-1.5 shadow"
+              >
+                <span>Register Auto</span>
+                <ArrowRight className="w-3.5 h-3.5 stroke-[3]" />
+              </button>
+            </div>
           </div>
 
           {/* 3. Central Fleet Admin HQ */}

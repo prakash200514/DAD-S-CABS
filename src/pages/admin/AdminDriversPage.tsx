@@ -12,11 +12,17 @@ import {
   X,
   Edit2,
   Trash2,
+  FileText,
+  ShieldCheck,
+  CheckCircle2,
+  MapPin,
+  Calendar,
 } from 'lucide-react';
 
 export const AdminDriversPage: React.FC = () => {
   const { drivers, toggleDriverOnline, addDriver } = useAdminStore();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedDriverForDocs, setSelectedDriverForDocs] = useState<Driver | null>(null);
   const [newDriverName, setNewDriverName] = useState('');
   const [newDriverPhone, setNewDriverPhone] = useState('');
   const [newDriverVehicleType, setNewDriverVehicleType] = useState<
@@ -185,10 +191,222 @@ export const AdminDriversPage: React.FC = () => {
                   {drv.currentLocation?.address?.split(',')[0]}
                 </span>
               </div>
+
+              {/* View Full Bio Data & Legal Documents Button */}
+              <button
+                type="button"
+                onClick={() => setSelectedDriverForDocs(drv)}
+                className="w-full py-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-amber-400 border border-slate-700/80 hover:border-amber-500/40 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span>View Bio Data &amp; Legal Docs</span>
+              </button>
             </div>
           );
         })}
       </div>
+
+      {/* Driver Bio Data & Legal Documents Inspection Modal */}
+      {selectedDriverForDocs && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 overflow-y-auto">
+          <div className="w-full max-w-2xl bg-slate-900 border-2 border-slate-800 rounded-3xl p-6 shadow-2xl space-y-5 my-8">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-3">
+                <img
+                  src={selectedDriverForDocs.avatar}
+                  alt={selectedDriverForDocs.name}
+                  className="w-12 h-12 rounded-2xl object-cover border-2 border-amber-500"
+                />
+                <div>
+                  <h3 className="font-extrabold text-base text-white">
+                    {selectedDriverForDocs.name}
+                  </h3>
+                  <span className="text-xs text-amber-400 font-mono font-bold">
+                    {selectedDriverForDocs.phone}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[11px] font-bold">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  RTO Verified
+                </span>
+                <button
+                  onClick={() => setSelectedDriverForDocs(null)}
+                  className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* 1. Driver Bio Data */}
+            <div className="space-y-2">
+              <h4 className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5" />
+                <span>1. Driver Bio Data &amp; Personal Profile</span>
+              </h4>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs">
+                <div>
+                  <span className="text-[10px] text-slate-400 block">Father / Spouse</span>
+                  <span className="font-bold text-white">
+                    {selectedDriverForDocs.bioData?.fatherOrSpouseName || 'S. Manickam'}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400 block">Date of Birth</span>
+                  <span className="font-bold text-white">
+                    {selectedDriverForDocs.bioData?.dob || '14 Jun 1988'}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400 block">Blood Group (Badge)</span>
+                  <span className="font-black text-red-400">
+                    {selectedDriverForDocs.bioData?.bloodGroup || 'O+'}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400 block">Operating District</span>
+                  <span className="font-bold text-amber-400">
+                    {selectedDriverForDocs.bioData?.district || 'Tirunelveli, Tamil Nadu'}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400 block">Driving Experience</span>
+                  <span className="font-bold text-white">
+                    {selectedDriverForDocs.bioData?.experienceYears || 7} Years
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400 block">Aadhaar (Govt ID)</span>
+                  <span className="font-mono text-slate-300">
+                    {selectedDriverForDocs.bioData?.aadhaarNumber || 'XXXX-XXXX-8456'}
+                  </span>
+                </div>
+                <div className="col-span-2 sm:col-span-3 pt-1 border-t border-slate-800/80">
+                  <span className="text-[10px] text-slate-400 block">Residential Address</span>
+                  <span className="text-slate-300">
+                    {selectedDriverForDocs.bioData?.address || '14/2 South Car Street, Palayamkottai, PIN 627002'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Detailed Auto Rickshaw Specifications */}
+            <div className="space-y-2">
+              <h4 className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Car className="w-3.5 h-3.5" />
+                <span>2. Registered Auto Rickshaw Specifications</span>
+              </h4>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs">
+                <div>
+                  <span className="text-[10px] text-slate-400 block">Registration Plate</span>
+                  <span className="font-mono font-black text-amber-400 text-sm">
+                    {selectedDriverForDocs.vehicle.registrationNumber}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400 block">Make &amp; Model</span>
+                  <span className="font-bold text-white">
+                    {selectedDriverForDocs.vehicle.model}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400 block">Fuel Certified</span>
+                  <span className="font-bold text-emerald-400">
+                    {selectedDriverForDocs.autoSpecs?.fuelType || 'LPG Auto'}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400 block">Capacity</span>
+                  <span className="font-bold text-white">3 Passengers + 1 Driver</span>
+                </div>
+                <div className="col-span-2 sm:col-span-4 pt-2 border-t border-slate-800">
+                  <span className="text-[10px] text-slate-400 block mb-1.5">Uploaded Vehicle Photograph (JPG Format)</span>
+                  <div className="h-32 w-full sm:w-56 rounded-xl overflow-hidden border border-slate-700 relative bg-slate-900">
+                    <img
+                      src={selectedDriverForDocs.autoSpecs?.photoUrl || '/assets/auto_rickshaw_card.jpg'}
+                      alt="Vehicle Photo"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute bottom-1.5 left-1.5 bg-slate-950/80 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-mono font-bold text-amber-400">
+                      {selectedDriverForDocs.vehicle.registrationNumber}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Driver Legal Documents Uploaded */}
+            <div className="space-y-2">
+              <h4 className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                <FileText className="w-3.5 h-3.5" />
+                <span>3. Verified Legal Documents &amp; Permits</span>
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span className="font-bold text-white block">Commercial DL &amp; PSV Badge</span>
+                    <span className="text-[10px] text-slate-400 font-mono">
+                      {selectedDriverForDocs.licenseNumber}
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-bold">
+                    ✓ Verified
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span className="font-bold text-white block">Vehicle RC Book</span>
+                    <span className="text-[10px] text-slate-400 font-mono">
+                      RC-{selectedDriverForDocs.vehicle.registrationNumber.replace(/\s+/g, '')}
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-bold">
+                    ✓ Verified
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span className="font-bold text-white block">TN Contract Carriage Permit</span>
+                    <span className="text-[10px] text-slate-400 font-mono">
+                      {selectedDriverForDocs.legalDocs?.permitNumber || 'TN/AUTO/PERMIT/2024/712'}
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-bold">
+                    ✓ Verified
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span className="font-bold text-white block">Vehicle Insurance &amp; FC</span>
+                    <span className="text-[10px] text-slate-400 font-mono">
+                      Valid through 2027
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-bold">
+                    ✓ Verified
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setSelectedDriverForDocs(null)}
+                className="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Add Driver Modal */}
       {showAddModal && (

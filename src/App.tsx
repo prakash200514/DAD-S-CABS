@@ -14,6 +14,7 @@ import { DriverLayout } from './layouts/DriverLayout';
 import { DriverDashboardPage } from './pages/driver/DriverDashboardPage';
 import { DriverEarningsPage } from './pages/driver/DriverEarningsPage';
 import { DriverLoginPage } from './pages/driver/DriverLoginPage';
+import { DriverRegisterPage } from './pages/driver/DriverRegisterPage';
 
 import { AdminLayout } from './layouts/AdminLayout';
 import { AdminOverviewPage } from './pages/admin/AdminOverviewPage';
@@ -51,8 +52,9 @@ export function App() {
           <Route path="profile" element={<ProfilePage />} />
         </Route>
 
-        {/* Driver Portal */}
+        {/* Driver Partner Portal */}
         <Route path="/driver/login" element={<DriverLoginPage />} />
+        <Route path="/driver/register" element={<DriverRegisterPage />} />
         <Route path="/driver" element={<DriverLayout />}>
           <Route index element={<DriverDashboardPage />} />
           <Route path="earnings" element={<DriverEarningsPage />} />

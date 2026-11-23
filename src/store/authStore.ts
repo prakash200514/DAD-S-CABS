@@ -8,6 +8,7 @@ interface AuthState {
   isAuthenticated: boolean;
   loginCustomer: (name: string, phone: string) => void;
   loginDriver: (phone: string) => void;
+  registerDriver: (driver: Driver) => void;
   loginAdmin: () => void;
   switchRole: (role: UserRole) => void;
   logout: () => void;
@@ -98,6 +99,22 @@ export const useAuthStore = create<AuthState>((set) => ({
         createdAt: '2026-01-01T00:00:00Z',
       },
       currentDriver: DEMO_DRIVER,
+      activeRole: 'DRIVER',
+      isAuthenticated: true,
+    });
+  },
+
+  registerDriver: (driver: Driver) => {
+    set({
+      currentUser: {
+        id: driver.userId,
+        name: driver.name,
+        phone: driver.phone,
+        role: 'DRIVER',
+        avatar: driver.avatar,
+        createdAt: new Date().toISOString(),
+      },
+      currentDriver: driver,
       activeRole: 'DRIVER',
       isAuthenticated: true,
     });
