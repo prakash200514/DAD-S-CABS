@@ -119,12 +119,12 @@ export const CustomerHomePage: React.FC = () => {
   };
 
   return (
-    <div className="relative flex-1 flex flex-col h-full min-h-0 overflow-hidden bg-slate-100 select-none">
+    <div className="relative flex-1 flex flex-col h-full min-h-0 overflow-hidden bg-[#06090E] select-none">
       {/* ------------------------------------------------------------- */}
       {/* 1. HOME SCREEN STATE (Exact match to Home Screen in image)     */}
       {/* ------------------------------------------------------------- */}
       {screenStage === 'home' && (
-        <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full bg-white sm:rounded-[36px] sm:my-3 sm:shadow-2xl overflow-hidden relative border-0 sm:border-8 border-slate-900">
+        <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full bg-white sm:rounded-[40px] sm:my-3 sm:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] overflow-hidden relative border-0 sm:border-[10px] border-slate-900 ring-1 ring-slate-800">
           {/* Top Status Bar (9:41) */}
           <div className="px-5 pt-3 pb-2 flex items-center justify-between text-xs text-slate-800 font-semibold z-20">
             <span>9:41</span>
@@ -260,7 +260,7 @@ export const CustomerHomePage: React.FC = () => {
       {/* 2. MAP & ROUTE SCREEN (Exact match to Map & Route in image)    */}
       {/* ------------------------------------------------------------- */}
       {screenStage === 'route' && (
-        <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full bg-slate-900 sm:rounded-[36px] sm:my-3 sm:shadow-2xl overflow-hidden relative border-0 sm:border-8 border-slate-900">
+        <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full bg-slate-900 sm:rounded-[40px] sm:my-3 sm:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] overflow-hidden relative border-0 sm:border-[10px] border-slate-900 ring-1 ring-slate-800">
           {/* Full Screen Interactive Map Layer */}
           <div className="absolute inset-0 z-0">
             <TamilNaduMap
@@ -314,7 +314,7 @@ export const CustomerHomePage: React.FC = () => {
       {/* 3. BOOKING CONFIRMED (Exact match to Booking Confirmed in image)*/}
       {/* ------------------------------------------------------------- */}
       {screenStage === 'confirmed' && (
-        <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full bg-[#080B0F] text-white sm:rounded-[36px] sm:my-3 sm:shadow-2xl overflow-hidden relative border-0 sm:border-8 border-slate-900 select-none">
+        <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full bg-[#080B0F] text-white sm:rounded-[40px] sm:my-3 sm:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] overflow-hidden relative border-0 sm:border-[10px] border-slate-900 ring-1 ring-slate-800 select-none">
           {/* Top Status Bar (9:41) */}
           <div className="px-5 pt-3 pb-2 flex items-center justify-between text-xs text-slate-400 font-semibold z-20">
             <span>9:41</span>
@@ -405,7 +405,7 @@ export const CustomerHomePage: React.FC = () => {
       {/* 4. LIVE TRACKING SCREEN (Exact match to Live Tracking in image)*/}
       {/* ------------------------------------------------------------- */}
       {screenStage === 'tracking' && (
-        <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full bg-slate-900 sm:rounded-[36px] sm:my-3 sm:shadow-2xl overflow-hidden relative border-0 sm:border-8 border-slate-900">
+        <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full bg-slate-900 sm:rounded-[40px] sm:my-3 sm:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] overflow-hidden relative border-0 sm:border-[10px] border-slate-900 ring-1 ring-slate-800">
           {/* Full Screen Map Layer */}
           <div className="absolute inset-0 z-0">
             <TamilNaduMap

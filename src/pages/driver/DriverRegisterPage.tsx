@@ -18,12 +18,8 @@ import {
   AlertCircle,
   Sparkles,
   Camera,
-  RefreshCw,
-  Award,
-  Clock,
   Car,
-  Image,
-  X,
+  BadgeCheck,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -57,8 +53,26 @@ const AUTO_MAKES_MODELS = [
   { make: 'Atul Auto', model: 'Atul Gemini Dzire Passenger' },
 ];
 
-const DEFAULT_DRIVER_PHOTO =
-  'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=360&q=80';
+const PRESET_DRIVER_PHOTOS = [
+  {
+    name: 'Muthuvel (Preset 1)',
+    url: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=360&q=80',
+  },
+  {
+    name: 'Karthik (Preset 2)',
+    url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=360&q=80',
+  },
+  {
+    name: 'Murugan (Preset 3)',
+    url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=360&q=80',
+  },
+  {
+    name: 'Selvam (Preset 4)',
+    url: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=360&q=80',
+  },
+];
+
+const DEFAULT_DRIVER_PHOTO = PRESET_DRIVER_PHOTOS[0].url;
 const DEFAULT_AUTO_PHOTO = '/assets/auto_rickshaw_card.jpg';
 
 export const DriverRegisterPage: React.FC = () => {
@@ -146,12 +160,11 @@ export const DriverRegisterPage: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate photo format: JPG / JPEG / PNG only
     const validPhotoTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     const isPhotoFormat = validPhotoTypes.includes(file.type) || file.name.match(/\.(jpg|jpeg|png|webp)$/i);
 
     if (!isPhotoFormat) {
-      setErrorMsg('Invalid format! Please upload Driver Photo in JPG or PNG photo format only.');
+      setErrorMsg('Invalid format! Please upload Driver Photo in JPG or PNG format.');
       return;
     }
 
@@ -176,12 +189,11 @@ export const DriverRegisterPage: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate photo format: JPG / JPEG / PNG only
     const validPhotoTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     const isPhotoFormat = validPhotoTypes.includes(file.type) || file.name.match(/\.(jpg|jpeg|png|webp)$/i);
 
     if (!isPhotoFormat) {
-      setErrorMsg('Invalid format! Please upload Vehicle Photo in JPG or PNG photo format only.');
+      setErrorMsg('Invalid format! Please upload Vehicle Photo in JPG or PNG format.');
       return;
     }
 
@@ -215,7 +227,7 @@ export const DriverRegisterPage: React.FC = () => {
     setErrorMsg('');
     setOtpSent(true);
     setOtpCountdown(30);
-    setInputOtp('7248'); // Pre-fill convenience for seamless testing
+    setInputOtp('7248');
   };
 
   const handleVerifyOtp = () => {
@@ -308,69 +320,71 @@ export const DriverRegisterPage: React.FC = () => {
       autoSpecs,
     };
 
-    // 1. Add to Admin Fleet
     addDriver(registeredDriver);
-
-    // 2. Log in driver in auth store
     registerDriver(registeredDriver);
-
-    // 3. Move to celebration step
     setCurrentStep(5);
 
     try {
       confetti({
-        particleCount: 110,
-        spread: 90,
+        particleCount: 100,
+        spread: 80,
         origin: { y: 0.4 },
-        colors: ['#F5A623', '#10B981', '#3B82F6', '#FFFFFF'],
+        colors: ['#FBBF24', '#10B981', '#38BDF8', '#FFFFFF'],
       });
     } catch (e) {}
   };
 
+  const stepLabels = [
+    { num: 1, title: 'Bio Data & Photo' },
+    { num: 2, title: 'Auto Specs' },
+    { num: 3, title: 'Legal Documents' },
+    { num: 4, title: 'OTP Verification' },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#0A0E14] text-white flex flex-col justify-between selection:bg-[#F5A623] selection:text-slate-950 p-4 sm:p-6">
+    <div className="min-h-screen bg-[#090D14] text-white flex flex-col justify-between selection:bg-amber-400 selection:text-slate-950 p-4 sm:p-6 antialiased">
       {/* Top Header */}
       <header className="max-w-2xl mx-auto w-full flex items-center justify-between py-2">
-        <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-2xl bg-[#F5A623] p-2 flex items-center justify-center shadow-md">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 p-2 flex items-center justify-center flex-shrink-0 shadow-sm">
             <img
               src="/icons/icon-auto.svg"
-              alt="Auto"
+              alt="Dad's Auto & Cab"
               className="w-full h-full object-contain"
             />
           </div>
           <div>
-            <h1 className="font-black text-sm text-white tracking-tight leading-tight">
-              Dad's Auto &amp; Cab
+            <h1 className="font-semibold text-sm text-white tracking-tight leading-tight">
+              Dad's <span className="text-amber-400 font-bold">Auto &amp; Cab</span>
             </h1>
-            <span className="text-[10px] text-amber-400 font-bold block uppercase tracking-wider">
-              Driver Partner Onboarding • Tamil Nadu
+            <span className="text-[11px] text-slate-400 font-medium block">
+              Driver Onboarding &amp; Fleet Verification • Tamil Nadu
             </span>
           </div>
         </div>
 
         <Link
           to="/driver/login"
-          className="text-xs text-slate-300 hover:text-white transition-colors py-1.5 px-3.5 rounded-full border border-slate-700 bg-slate-900 flex items-center gap-1.5"
+          className="text-xs text-slate-300 hover:text-white transition-colors py-1.5 px-3.5 rounded-full border border-slate-800 hover:border-slate-700 bg-slate-900/90 font-medium flex items-center gap-1.5"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Already Registered? Sign In</span>
+          <span>Driver Sign In</span>
         </Link>
       </header>
 
       {/* Main Registration Card */}
       <main className="max-w-2xl mx-auto w-full my-6">
-        <div className="bg-[#121721] border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
-          {/* Header Title & Stepper Indicator */}
+        <div className="bg-[#101520] border border-slate-800/80 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 ring-1 ring-white/[0.03]">
+          {/* Header Title & Clean Segmented Stepper */}
           {currentStep < 5 && (
             <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
                 <div>
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[11px] font-black uppercase tracking-wider mb-1">
-                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-slate-300 text-[11px] font-medium tracking-wide mb-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                     Step {currentStep} of 4
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                  <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                     {currentStep === 1 && 'Driver Bio Data & Profile Photo'}
                     {currentStep === 2 && 'Auto Rickshaw Details & Vehicle Photo'}
                     {currentStep === 3 && 'Driver Legal Details & Documents'}
@@ -378,26 +392,28 @@ export const DriverRegisterPage: React.FC = () => {
                   </h2>
                 </div>
 
+                {/* Modern Step Pills */}
                 <div className="flex items-center gap-1.5">
-                  {[1, 2, 3, 4].map((stepNum) => (
+                  {stepLabels.map((s) => (
                     <div
-                      key={stepNum}
+                      key={s.num}
                       className={`h-2 rounded-full transition-all ${
-                        currentStep === stepNum
-                          ? 'w-8 bg-amber-500'
-                          : currentStep > stepNum
-                          ? 'w-4 bg-emerald-500'
+                        currentStep === s.num
+                          ? 'w-8 bg-amber-400'
+                          : currentStep > s.num
+                          ? 'w-4 bg-emerald-400'
                           : 'w-4 bg-slate-800'
                       }`}
+                      title={s.title}
                     />
                   ))}
                 </div>
               </div>
 
               {errorMsg && (
-                <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/40 text-red-400 text-xs flex items-center gap-2">
+                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                  <span className="font-semibold">{errorMsg}</span>
+                  <span className="font-medium">{errorMsg}</span>
                 </div>
               )}
             </div>
@@ -408,55 +424,81 @@ export const DriverRegisterPage: React.FC = () => {
           {/* =============================================================== */}
           {currentStep === 1 && (
             <div className="space-y-5">
-              <p className="text-xs text-slate-400">
-                Please provide your official bio data and upload your driver photograph in JPG or photo format.
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Please provide your official bio data and upload your driver photograph. This photo is displayed to passengers and used on your Tamil Nadu digital badge.
               </p>
 
-              {/* DEDICATED DRIVER PHOTO UPLOAD SECTION (JPG ONLY) */}
-              <div className="bg-slate-900/90 border-2 border-dashed border-amber-500/40 rounded-3xl p-5 space-y-3">
+              {/* DEDICATED DRIVER PHOTO UPLOAD SECTION (CLEAN KYC STYLE) */}
+              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                  <span className="text-xs font-semibold text-slate-200 flex items-center gap-2">
                     <Camera className="w-4 h-4 text-amber-400" />
-                    <span>Upload Driver Photo (JPG Format Only) *</span>
+                    <span>Driver Passport Photo / Selfie (Bio Data ID) *</span>
                   </span>
-                  <span className="text-[10px] font-bold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full uppercase">
-                    .JPG / .JPEG / .PNG Only
+                  <span className="text-[10px] font-medium text-slate-400 bg-slate-800 px-2.5 py-0.5 rounded-full">
+                    .JPG / .PNG Only
                   </span>
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center gap-5">
-                  {/* Photo Preview Circle/Card */}
-                  <div className="relative group">
+                  {/* Photo Preview Card */}
+                  <div className="relative group flex-shrink-0">
                     <img
                       src={avatarUrl}
                       alt="Driver Photo Preview"
-                      className="w-24 h-24 rounded-2xl object-cover border-2 border-amber-500 shadow-xl"
+                      className="w-24 h-24 rounded-2xl object-cover ring-1 ring-slate-700 shadow-md"
                     />
                     <div className="absolute -bottom-1 -right-1 bg-emerald-500 text-slate-950 p-1 rounded-full shadow">
-                      <Check className="w-3 h-3 stroke-[3.5]" />
+                      <Check className="w-3 h-3 stroke-[3]" />
                     </div>
                   </div>
 
-                  {/* Upload Controls */}
-                  <div className="flex-1 space-y-2 text-center sm:text-left">
+                  {/* Upload Controls & Presets */}
+                  <div className="flex-1 space-y-2.5 text-center sm:text-left">
                     <div>
-                      <p className="text-xs font-bold text-white">
+                      <p className="text-xs font-semibold text-white">
                         {driverPhotoFileName}
                       </p>
                       <p className="text-[11px] text-slate-400">
-                        Size: {driverPhotoFileSize} • Format: JPG Photo
+                        Size: {driverPhotoFileSize} • Certified Driver Photo
                       </p>
                     </div>
 
-                    <p className="text-[11px] text-slate-400 leading-relaxed">
-                      Upload your recent front-facing passport photo or clear selfie. This photo appears on your official Dad's Auto Driver Badge and passenger app.
-                    </p>
+                    {/* Quick Avatar Thumbnails for Instant Switching */}
+                    <div className="space-y-1">
+                      <span className="text-[10px] text-slate-400 font-medium block">
+                        Choose sample photo or upload your own:
+                      </span>
+                      <div className="flex items-center justify-center sm:justify-start gap-2">
+                        {PRESET_DRIVER_PHOTOS.map((preset, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => {
+                              setAvatarUrl(preset.url);
+                              setDriverPhotoFileName(`driver_profile_${idx + 1}.jpg`);
+                              setDriverPhotoFileSize('380 KB');
+                            }}
+                            className={`w-9 h-9 rounded-xl overflow-hidden transition-all ${
+                              avatarUrl === preset.url
+                                ? 'ring-2 ring-amber-400 scale-105'
+                                : 'ring-1 ring-slate-800 opacity-70 hover:opacity-100'
+                            }`}
+                          >
+                            <img
+                              src={preset.url}
+                              alt={preset.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
 
                     <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
-                      {/* Hidden File Input strictly accepting image formats */}
-                      <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition-all">
-                        <Upload className="w-3.5 h-3.5 stroke-[2.5]" />
-                        <span>Select Driver Photo (.JPG)</span>
+                      <label className="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-medium text-xs shadow-sm transition-all">
+                        <Upload className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Upload Custom Photo (.JPG)</span>
                         <input
                           type="file"
                           accept="image/jpeg,image/jpg,image/png,image/webp"
@@ -464,7 +506,6 @@ export const DriverRegisterPage: React.FC = () => {
                           onChange={handleDriverPhotoChange}
                         />
                       </label>
-
                       <span className="text-[11px] text-slate-500">Max size: 5 MB</span>
                     </div>
                   </div>
@@ -475,7 +516,7 @@ export const DriverRegisterPage: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Full Name */}
                 <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
                     Driver Full Name (As per DL) *
                   </label>
                   <input
@@ -483,13 +524,13 @@ export const DriverRegisterPage: React.FC = () => {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="e.g. M. Muthuvel Rajan"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:border-amber-500 outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-white placeholder-slate-500 focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 outline-none transition-all font-medium"
                   />
                 </div>
 
                 {/* Father / Spouse Name */}
                 <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
                     Father's / Spouse's Name *
                   </label>
                   <input
@@ -497,32 +538,32 @@ export const DriverRegisterPage: React.FC = () => {
                     value={fatherOrSpouse}
                     onChange={(e) => setFatherOrSpouse(e.target.value)}
                     placeholder="e.g. S. Manickam"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:border-amber-500 outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-white placeholder-slate-500 focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 outline-none transition-all font-medium"
                   />
                 </div>
 
                 {/* Date of Birth */}
                 <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
                     Date of Birth (DOB) *
                   </label>
                   <input
                     type="date"
                     value={dob}
                     onChange={(e) => setDob(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-amber-500 outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-white focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 outline-none transition-all font-medium"
                   />
                 </div>
 
                 {/* Blood Group */}
                 <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
                     Blood Group (TN Transport Badge) *
                   </label>
                   <select
                     value={bloodGroup}
                     onChange={(e) => setBloodGroup(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-amber-500 outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-white focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 outline-none transition-all font-medium"
                   >
                     {['O+', 'A+', 'B+', 'AB+', 'O-', 'A-', 'B-', 'AB-'].map((bg) => (
                       <option key={bg} value={bg}>
@@ -534,13 +575,13 @@ export const DriverRegisterPage: React.FC = () => {
 
                 {/* District in TN */}
                 <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
                     Operating District (Tamil Nadu) *
                   </label>
                   <select
                     value={district}
                     onChange={(e) => setDistrict(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-amber-500 outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-white focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 outline-none transition-all font-medium"
                   >
                     {TN_DISTRICTS.map((d) => (
                       <option key={d} value={d}>
@@ -552,7 +593,7 @@ export const DriverRegisterPage: React.FC = () => {
 
                 {/* Driving Experience */}
                 <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
                     Auto Driving Experience (Years) *
                   </label>
                   <input
@@ -561,14 +602,14 @@ export const DriverRegisterPage: React.FC = () => {
                     max={40}
                     value={experienceYears}
                     onChange={(e) => setExperienceYears(parseInt(e.target.value) || 1)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-amber-500 outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-white focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 outline-none transition-all font-medium"
                   />
                 </div>
               </div>
 
               {/* Residential Address */}
               <div>
-                <label className="text-xs font-bold text-slate-300 block mb-1">
+                <label className="text-xs font-medium text-slate-300 block mb-1">
                   Residential Address (with PIN Code) *
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
@@ -577,7 +618,7 @@ export const DriverRegisterPage: React.FC = () => {
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder="House No, Street, Landmark"
-                    className="sm:col-span-3 px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:border-amber-500 outline-none"
+                    className="sm:col-span-3 px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-white placeholder-slate-500 focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 outline-none transition-all font-medium"
                   />
                   <input
                     type="text"
@@ -585,7 +626,7 @@ export const DriverRegisterPage: React.FC = () => {
                     value={pincode}
                     onChange={(e) => setPincode(e.target.value)}
                     placeholder="PIN: 627002"
-                    className="px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:border-amber-500 outline-none font-mono"
+                    className="px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-white placeholder-slate-500 focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 outline-none font-mono"
                   />
                 </div>
               </div>
@@ -602,10 +643,10 @@ export const DriverRegisterPage: React.FC = () => {
                     setErrorMsg('');
                     setCurrentStep(2);
                   }}
-                  className="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center gap-2 transition-all shadow-md cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-semibold text-xs flex items-center gap-2 transition-all shadow-sm cursor-pointer"
                 >
-                  <span>Next: Auto Rickshaw &amp; Vehicle Photo</span>
-                  <ArrowRight className="w-4 h-4 stroke-[3]" />
+                  <span>Next: Auto Rickshaw Details</span>
+                  <ArrowRight className="w-4 h-4 stroke-[2.5]" />
                 </button>
               </div>
             </div>
@@ -616,46 +657,46 @@ export const DriverRegisterPage: React.FC = () => {
           {/* =============================================================== */}
           {currentStep === 2 && (
             <div className="space-y-5">
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-400 leading-relaxed">
                 Enter your commercial Auto Rickshaw technical specifications and upload a clear exterior vehicle photo in JPG format.
               </p>
 
-              {/* DEDICATED VEHICLE PHOTO UPLOAD SECTION (JPG ONLY) */}
-              <div className="bg-slate-900/90 border-2 border-dashed border-amber-500/40 rounded-3xl p-5 space-y-3">
+              {/* DEDICATED VEHICLE PHOTO UPLOAD SECTION (CLEAN KYC STYLE) */}
+              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                  <span className="text-xs font-semibold text-slate-200 flex items-center gap-2">
                     <Car className="w-4 h-4 text-amber-400" />
                     <span>Upload Auto Rickshaw Vehicle Photo (JPG Format Only) *</span>
                   </span>
-                  <span className="text-[10px] font-bold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full uppercase">
-                    .JPG / .JPEG / .PNG Only
+                  <span className="text-[10px] font-medium text-slate-400 bg-slate-800 px-2.5 py-0.5 rounded-full">
+                    .JPG / .PNG Only
                   </span>
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center gap-5">
                   {/* Vehicle Photo Preview Card */}
-                  <div className="relative group w-40 sm:w-44 h-28 rounded-2xl overflow-hidden border-2 border-amber-500 shadow-xl flex-shrink-0 bg-slate-950">
+                  <div className="relative group w-44 h-28 rounded-xl overflow-hidden ring-1 ring-slate-800 flex-shrink-0 bg-slate-950">
                     <img
                       src={vehiclePhotoUrl}
                       alt="Vehicle Photo Preview"
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute top-2 left-2 bg-slate-950/80 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-mono font-bold text-amber-400 border border-amber-500/40">
+                    <div className="absolute top-2 left-2 bg-slate-900/90 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-mono font-semibold text-amber-400 border border-slate-800">
                       {regPlate || 'TN 72'}
                     </div>
                     <div className="absolute bottom-2 right-2 bg-emerald-500 text-slate-950 p-1 rounded-full shadow">
-                      <Check className="w-3 h-3 stroke-[3.5]" />
+                      <Check className="w-3 h-3 stroke-[3]" />
                     </div>
                   </div>
 
                   {/* Vehicle Photo Controls */}
                   <div className="flex-1 space-y-2 text-center sm:text-left">
                     <div>
-                      <p className="text-xs font-bold text-white">
+                      <p className="text-xs font-semibold text-white">
                         {vehiclePhotoFileName}
                       </p>
                       <p className="text-[11px] text-slate-400">
-                        Size: {vehiclePhotoFileSize} • Format: JPG Vehicle Photo
+                        Size: {vehiclePhotoFileSize} • Certified Commercial Vehicle
                       </p>
                     </div>
 
@@ -664,9 +705,8 @@ export const DriverRegisterPage: React.FC = () => {
                     </p>
 
                     <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
-                      {/* Hidden File Input strictly accepting image formats */}
-                      <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition-all">
-                        <Upload className="w-3.5 h-3.5 stroke-[2.5]" />
+                      <label className="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-medium text-xs shadow-sm transition-all">
+                        <Upload className="w-3.5 h-3.5 text-amber-400" />
                         <span>Select Vehicle Photo (.JPG)</span>
                         <input
                           type="file"
@@ -675,7 +715,6 @@ export const DriverRegisterPage: React.FC = () => {
                           onChange={handleVehiclePhotoChange}
                         />
                       </label>
-
                       <span className="text-[11px] text-slate-500">Max size: 8 MB</span>
                     </div>
                   </div>
@@ -686,7 +725,7 @@ export const DriverRegisterPage: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Auto Rickshaw Registration Number */}
                 <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
                     Auto Rickshaw Registration Plate Number *
                   </label>
                   <input
@@ -694,7 +733,7 @@ export const DriverRegisterPage: React.FC = () => {
                     value={regPlate}
                     onChange={(e) => setRegPlate(e.target.value.toUpperCase())}
                     placeholder="e.g. TN 72 AB 4587"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-amber-400 font-mono font-bold focus:border-amber-500 outline-none uppercase"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-100 font-mono font-semibold focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 outline-none uppercase transition-all tracking-wider"
                   />
                   <span className="text-[10px] text-slate-500 mt-1 block">
                     Must start with TN followed by RTO code (e.g. TN 72, TN 59, TN 01)
@@ -703,13 +742,13 @@ export const DriverRegisterPage: React.FC = () => {
 
                 {/* Make & Model */}
                 <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
                     Auto Make &amp; Model *
                   </label>
                   <select
                     value={selectedMakeModel}
                     onChange={(e) => setSelectedMakeModel(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-amber-500 outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-white focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 outline-none transition-all font-medium"
                   >
                     {AUTO_MAKES_MODELS.map((item, idx) => (
                       <option key={idx} value={item.model}>
@@ -721,7 +760,7 @@ export const DriverRegisterPage: React.FC = () => {
 
                 {/* Fuel Type */}
                 <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
                     Fuel Type (Certified) *
                   </label>
                   <div className="grid grid-cols-2 gap-2">
@@ -730,10 +769,10 @@ export const DriverRegisterPage: React.FC = () => {
                         key={type}
                         type="button"
                         onClick={() => setFuelType(type)}
-                        className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${
+                        className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all ${
                           fuelType === type
-                            ? 'bg-amber-500 text-slate-950 border-amber-500 shadow-sm'
-                            : 'bg-slate-900 border-slate-700 text-slate-300 hover:text-white'
+                            ? 'bg-slate-800 text-white border-slate-700 ring-1 ring-amber-400/30 font-semibold shadow-sm'
+                            : 'bg-slate-900/90 border-slate-800 text-slate-400 hover:text-white'
                         }`}
                       >
                         {type === 'ELECTRIC' ? '⚡ EV (Electric)' : type}
@@ -744,13 +783,13 @@ export const DriverRegisterPage: React.FC = () => {
 
                 {/* Year of Manufacture */}
                 <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
                     Manufacturing Year *
                   </label>
                   <select
                     value={mfgYear}
                     onChange={(e) => setMfgYear(parseInt(e.target.value))}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-amber-500 outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-white focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 outline-none transition-all font-medium"
                   >
                     {[2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018].map((yr) => (
                       <option key={yr} value={yr}>
@@ -762,27 +801,27 @@ export const DriverRegisterPage: React.FC = () => {
 
                 {/* Seating Capacity */}
                 <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
                     Certified Passenger Capacity
                   </label>
                   <input
                     type="text"
                     disabled
                     value="3 Passengers + 1 Driver (Standard TN Norm)"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-400 font-semibold cursor-not-allowed"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800/80 text-xs text-slate-400 font-medium cursor-not-allowed"
                   />
                 </div>
 
                 {/* Auto Rickshaw Color */}
                 <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">
+                  <label className="text-xs font-medium text-slate-300 block mb-1">
                     Auto Rickshaw Body Color
                   </label>
                   <input
                     type="text"
                     disabled
                     value={autoColor}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-amber-400 font-semibold cursor-not-allowed"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800/80 text-xs text-slate-300 font-medium cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -792,7 +831,7 @@ export const DriverRegisterPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setCurrentStep(1)}
-                  className="px-5 py-2.5 rounded-xl border border-slate-700 bg-slate-900 text-slate-300 hover:text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                  className="px-5 py-2 rounded-xl border border-slate-800 bg-slate-900 text-slate-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Back</span>
@@ -808,10 +847,10 @@ export const DriverRegisterPage: React.FC = () => {
                     setErrorMsg('');
                     setCurrentStep(3);
                   }}
-                  className="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center gap-2 transition-all shadow-md cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-semibold text-xs flex items-center gap-2 transition-all shadow-sm cursor-pointer"
                 >
                   <span>Next: Legal Documents</span>
-                  <ArrowRight className="w-4 h-4 stroke-[3]" />
+                  <ArrowRight className="w-4 h-4 stroke-[2.5]" />
                 </button>
               </div>
             </div>
@@ -822,25 +861,25 @@ export const DriverRegisterPage: React.FC = () => {
           {/* =============================================================== */}
           {currentStep === 3 && (
             <div className="space-y-5">
-              <p className="text-xs text-slate-400">
-                Upload mandatory government and transport authority legal documents. All files are encrypted and verified against RTO database.
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Upload mandatory government and transport authority legal documents. All files are encrypted and cross-referenced with Tamil Nadu RTO registry.
               </p>
 
               {/* 1. Commercial Driving Licence */}
-              <div className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-3">
+              <div className="p-4 rounded-2xl bg-slate-900/50 border border-slate-800 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-black text-white flex items-center gap-2">
+                  <span className="text-xs font-semibold text-white flex items-center gap-2">
                     <FileText className="w-4 h-4 text-amber-400" />
                     1. Commercial Driving Licence (DL) &amp; PSV Badge
                   </span>
-                  <span className="text-[10px] bg-emerald-500/10 text-emerald-400 font-bold px-2 py-0.5 rounded-md">
-                    ✓ Document Attached
+                  <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium px-2 py-0.5 rounded-full">
+                    ✓ Verified Document
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                   <div>
-                    <label className="text-[10px] font-bold text-slate-400 block mb-0.5">DL Number</label>
+                    <label className="text-[10px] font-medium text-slate-400 block mb-0.5">DL Number</label>
                     <input
                       type="text"
                       value={dlNumber}
@@ -849,7 +888,7 @@ export const DriverRegisterPage: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] font-bold text-slate-400 block mb-0.5">DL Expiry Date</label>
+                    <label className="text-[10px] font-medium text-slate-400 block mb-0.5">DL Expiry Date</label>
                     <input
                       type="date"
                       value={dlExpiry}
@@ -858,7 +897,7 @@ export const DriverRegisterPage: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] font-bold text-slate-400 block mb-0.5">PSV Commercial Badge</label>
+                    <label className="text-[10px] font-medium text-slate-400 block mb-0.5">PSV Commercial Badge</label>
                     <input
                       type="text"
                       value={psvBadgeNumber}
@@ -868,9 +907,9 @@ export const DriverRegisterPage: React.FC = () => {
                   </div>
                 </div>
 
-                <label className="flex items-center gap-2 text-xs text-amber-400 font-bold cursor-pointer hover:underline">
-                  <Upload className="w-3.5 h-3.5" />
-                  <span>Re-upload Driving Licence Scan / Photo</span>
+                <label className="flex items-center gap-2 text-xs text-slate-300 hover:text-white font-medium cursor-pointer transition-colors">
+                  <Upload className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Update Driving Licence Scan / Photo</span>
                   <input
                     type="file"
                     className="hidden"
@@ -880,19 +919,19 @@ export const DriverRegisterPage: React.FC = () => {
               </div>
 
               {/* 2. Aadhaar Card */}
-              <div className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-3">
+              <div className="p-4 rounded-2xl bg-slate-900/50 border border-slate-800 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-black text-white flex items-center gap-2">
+                  <span className="text-xs font-semibold text-white flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4 text-emerald-400" />
                     2. Aadhaar Card (Bio Data Verification)
                   </span>
-                  <span className="text-[10px] bg-emerald-500/10 text-emerald-400 font-bold px-2 py-0.5 rounded-md">
-                    ✓ Document Attached
+                  <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium px-2 py-0.5 rounded-full">
+                    ✓ Verified Document
                   </span>
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-bold text-slate-400 block mb-0.5">12-Digit Aadhaar Number</label>
+                  <label className="text-[10px] font-medium text-slate-400 block mb-0.5">12-Digit Aadhaar Number</label>
                   <input
                     type="text"
                     value={aadhaarNumber}
@@ -902,9 +941,9 @@ export const DriverRegisterPage: React.FC = () => {
                   />
                 </div>
 
-                <label className="flex items-center gap-2 text-xs text-amber-400 font-bold cursor-pointer hover:underline">
-                  <Upload className="w-3.5 h-3.5" />
-                  <span>Re-upload Aadhaar Front &amp; Back Scan</span>
+                <label className="flex items-center gap-2 text-xs text-slate-300 hover:text-white font-medium cursor-pointer transition-colors">
+                  <Upload className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Update Aadhaar Front &amp; Back Scan</span>
                   <input
                     type="file"
                     className="hidden"
@@ -916,12 +955,12 @@ export const DriverRegisterPage: React.FC = () => {
               {/* 3. RC Book & TN Auto Commercial Permit */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* RC Book */}
-                <div className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-2">
-                  <span className="text-xs font-black text-white block">
+                <div className="p-4 rounded-2xl bg-slate-900/50 border border-slate-800 space-y-2">
+                  <span className="text-xs font-semibold text-white block">
                     3. Vehicle RC Book
                   </span>
                   <div>
-                    <label className="text-[10px] font-bold text-slate-400 block mb-0.5">RC Certificate No.</label>
+                    <label className="text-[10px] font-medium text-slate-400 block mb-0.5">RC Certificate No.</label>
                     <input
                       type="text"
                       value={rcBookNumber}
@@ -929,20 +968,20 @@ export const DriverRegisterPage: React.FC = () => {
                       className="w-full px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white font-mono"
                     />
                   </div>
-                  <label className="flex items-center gap-1.5 text-xs text-amber-400 font-bold cursor-pointer hover:underline pt-1">
-                    <Upload className="w-3.5 h-3.5" />
+                  <label className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white font-medium cursor-pointer transition-colors pt-1">
+                    <Upload className="w-3.5 h-3.5 text-amber-400" />
                     <span>Upload RC Copy</span>
                     <input type="file" className="hidden" onChange={(e) => handleDocumentFileUpload('rc', e)} />
                   </label>
                 </div>
 
                 {/* Auto Commercial Permit */}
-                <div className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-2">
-                  <span className="text-xs font-black text-white block">
+                <div className="p-4 rounded-2xl bg-slate-900/50 border border-slate-800 space-y-2">
+                  <span className="text-xs font-semibold text-white block">
                     4. TN Commercial Auto Permit
                   </span>
                   <div>
-                    <label className="text-[10px] font-bold text-slate-400 block mb-0.5">Permit Number</label>
+                    <label className="text-[10px] font-medium text-slate-400 block mb-0.5">Permit Number</label>
                     <input
                       type="text"
                       value={permitNumber}
@@ -950,8 +989,8 @@ export const DriverRegisterPage: React.FC = () => {
                       className="w-full px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white font-mono"
                     />
                   </div>
-                  <label className="flex items-center gap-1.5 text-xs text-amber-400 font-bold cursor-pointer hover:underline pt-1">
-                    <Upload className="w-3.5 h-3.5" />
+                  <label className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white font-medium cursor-pointer transition-colors pt-1">
+                    <Upload className="w-3.5 h-3.5 text-amber-400" />
                     <span>Upload Permit Copy</span>
                     <input type="file" className="hidden" onChange={(e) => handleDocumentFileUpload('permit', e)} />
                   </label>
@@ -959,13 +998,13 @@ export const DriverRegisterPage: React.FC = () => {
               </div>
 
               {/* 4. Insurance & Fitness Certificate */}
-              <div className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-3">
-                <span className="text-xs font-black text-white block">
+              <div className="p-4 rounded-2xl bg-slate-900/50 border border-slate-800 space-y-3">
+                <span className="text-xs font-semibold text-white block">
                   5. Auto Insurance &amp; Fitness Certificate (FC)
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                   <div>
-                    <label className="text-[10px] font-bold text-slate-400 block mb-0.5">Insurance Company</label>
+                    <label className="text-[10px] font-medium text-slate-400 block mb-0.5">Insurance Company</label>
                     <input
                       type="text"
                       value={insuranceProvider}
@@ -974,7 +1013,7 @@ export const DriverRegisterPage: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] font-bold text-slate-400 block mb-0.5">Insurance Valid Upto</label>
+                    <label className="text-[10px] font-medium text-slate-400 block mb-0.5">Insurance Valid Upto</label>
                     <input
                       type="date"
                       value={insuranceExpiry}
@@ -983,7 +1022,7 @@ export const DriverRegisterPage: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] font-bold text-slate-400 block mb-0.5">FC Valid Upto</label>
+                    <label className="text-[10px] font-medium text-slate-400 block mb-0.5">FC Valid Upto</label>
                     <input
                       type="date"
                       value={fcExpiry}
@@ -999,7 +1038,7 @@ export const DriverRegisterPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setCurrentStep(2)}
-                  className="px-5 py-2.5 rounded-xl border border-slate-700 bg-slate-900 text-slate-300 hover:text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                  className="px-5 py-2 rounded-xl border border-slate-800 bg-slate-900 text-slate-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Back</span>
@@ -1015,10 +1054,10 @@ export const DriverRegisterPage: React.FC = () => {
                     setErrorMsg('');
                     setCurrentStep(4);
                   }}
-                  className="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center gap-2 transition-all shadow-md cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-semibold text-xs flex items-center gap-2 transition-all shadow-sm cursor-pointer"
                 >
                   <span>Next: Mobile OTP Verification</span>
-                  <ArrowRight className="w-4 h-4 stroke-[3]" />
+                  <ArrowRight className="w-4 h-4 stroke-[2.5]" />
                 </button>
               </div>
             </div>
@@ -1030,10 +1069,10 @@ export const DriverRegisterPage: React.FC = () => {
           {currentStep === 4 && (
             <div className="space-y-6">
               <div className="text-center space-y-1">
-                <h3 className="text-lg font-black text-white">
+                <h3 className="text-lg font-bold text-white">
                   Driver Mobile Verification
                 </h3>
-                <p className="text-xs text-slate-400 max-w-sm mx-auto">
+                <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
                   A high-priority SMS one-time passcode (OTP) is sent to authenticate your mobile number for passenger dispatch.
                 </p>
               </div>
@@ -1041,7 +1080,7 @@ export const DriverRegisterPage: React.FC = () => {
               {/* Phone Input Box */}
               <div className="max-w-sm mx-auto space-y-3">
                 <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-amber-400">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400">
                     +91
                   </span>
                   <input
@@ -1051,7 +1090,7 @@ export const DriverRegisterPage: React.FC = () => {
                     value={mobile}
                     onChange={(e) => setMobile(e.target.value.replace(/\D/g, ''))}
                     placeholder="9443219870"
-                    className="w-full pl-12 pr-4 py-3 rounded-2xl bg-slate-900 border border-slate-700 text-sm font-bold text-white focus:border-amber-500 outline-none font-mono"
+                    className="w-full pl-12 pr-4 py-3 rounded-xl bg-slate-900/90 border border-slate-800 text-sm font-semibold text-white focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 outline-none font-mono"
                   />
                 </div>
 
@@ -1059,28 +1098,30 @@ export const DriverRegisterPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleSendOtp}
-                    className="w-full py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-semibold text-xs shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <span>Send SMS OTP to Number</span>
-                    <ArrowRight className="w-4 h-4 stroke-[3]" />
+                    <ArrowRight className="w-4 h-4 stroke-[2.5]" />
                   </button>
                 ) : (
                   <div className="space-y-4 pt-2">
                     {/* Simulated live SMS Banner */}
-                    <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs space-y-1">
-                      <div className="flex items-center gap-1.5 font-bold">
+                    <div className="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-slate-300 text-xs space-y-1">
+                      <div className="flex items-center gap-1.5 font-medium text-slate-200">
                         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                         <span>SMS Notification Sent (+91 {mobile})</span>
                       </div>
-                      <p className="text-[11px] text-slate-300">
+                      <p className="text-[11px] text-slate-400">
                         Your Dad's Auto Driver Registration OTP is{' '}
-                        <strong className="text-amber-400 font-mono text-sm underline">{otpCode}</strong>.
+                        <strong className="text-amber-400 font-mono text-sm bg-slate-950 px-1.5 py-0.5 rounded border border-slate-800">
+                          {otpCode}
+                        </strong>
                       </p>
                     </div>
 
                     {/* 4-digit OTP Input */}
                     <div>
-                      <label className="text-xs text-slate-400 font-bold block mb-1 text-center">
+                      <label className="text-xs text-slate-400 font-medium block mb-1 text-center">
                         Enter 4-Digit Verification Code
                       </label>
                       <input
@@ -1089,7 +1130,7 @@ export const DriverRegisterPage: React.FC = () => {
                         value={inputOtp}
                         onChange={(e) => setInputOtp(e.target.value)}
                         placeholder="7248"
-                        className="w-full text-center tracking-widest text-2xl font-black py-3 rounded-2xl bg-slate-900 border border-slate-700 text-amber-400 focus:border-amber-500 outline-none font-mono"
+                        className="w-full text-center tracking-[0.4em] text-2xl font-bold py-3 rounded-xl bg-slate-900/90 border border-slate-800 text-white focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 outline-none font-mono"
                       />
                     </div>
 
@@ -1098,20 +1139,20 @@ export const DriverRegisterPage: React.FC = () => {
                         type="button"
                         disabled={isVerifyingOtp}
                         onClick={handleVerifyOtp}
-                        className="w-full py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                        className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
                       >
                         {isVerifyingOtp ? (
                           <div className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin"></div>
                         ) : (
                           <>
-                            <CheckCircle2 className="w-4 h-4 stroke-[3]" />
+                            <CheckCircle2 className="w-4 h-4 stroke-[2.5]" />
                             <span>Verify Code &amp; Complete Registration</span>
                           </>
                         )}
                       </button>
                     ) : (
-                      <div className="p-3 rounded-2xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 text-xs font-black flex items-center justify-center gap-2">
-                        <CheckCircle2 className="w-5 h-5 stroke-[3]" />
+                      <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center justify-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 stroke-[2.5]" />
                         <span>Phone Number +91 {mobile} Verified Successfully!</span>
                       </div>
                     )}
@@ -1125,7 +1166,7 @@ export const DriverRegisterPage: React.FC = () => {
                         <button
                           type="button"
                           onClick={handleSendOtp}
-                          className="text-amber-400 font-bold hover:underline cursor-pointer"
+                          className="text-amber-400 font-medium hover:underline cursor-pointer"
                         >
                           Resend OTP
                         </button>
@@ -1136,11 +1177,11 @@ export const DriverRegisterPage: React.FC = () => {
               </div>
 
               {/* Nav & Submit Buttons */}
-              <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between">
                 <button
                   type="button"
                   onClick={() => setCurrentStep(3)}
-                  className="px-5 py-2.5 rounded-xl border border-slate-700 bg-slate-900 text-slate-300 hover:text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                  className="px-5 py-2 rounded-xl border border-slate-800 bg-slate-900 text-slate-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Back to Documents</span>
@@ -1150,10 +1191,10 @@ export const DriverRegisterPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleFinalSubmitRegistration}
-                    className="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-black text-sm shadow-xl flex items-center gap-2 animate-bounce cursor-pointer"
+                    className="px-6 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-semibold text-xs shadow-sm flex items-center gap-2 transition-all cursor-pointer"
                   >
                     <span>Register Auto &amp; Go Online</span>
-                    <ArrowRight className="w-4 h-4 stroke-[3]" />
+                    <ArrowRight className="w-4 h-4 stroke-[2.5]" />
                   </button>
                 )}
               </div>
@@ -1165,76 +1206,76 @@ export const DriverRegisterPage: React.FC = () => {
           {/* =============================================================== */}
           {currentStep === 5 && (
             <div className="text-center py-6 space-y-6">
-              <div className="w-20 h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-500 text-emerald-400 flex items-center justify-center mx-auto shadow-glow-yellow">
-                <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
+              <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto shadow-sm">
+                <CheckCircle2 className="w-8 h-8 stroke-[2.5]" />
               </div>
 
               <div className="space-y-1">
-                <span className="text-xs font-bold text-amber-400 uppercase tracking-widest block">
-                  Vanakkam &amp; Congratulations!
+                <span className="text-xs font-medium text-slate-400 uppercase tracking-widest block">
+                  Registration Complete
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-black text-white">
-                  Driver Partner Registered!
+                <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                  Driver Partner Registered
                 </h2>
-                <p className="text-xs text-slate-400 max-w-md mx-auto">
-                  Your Auto Rickshaw has been successfully registered under Dad's Auto &amp; Cab fleet in Tamil Nadu. Your digital partner profile is active.
+                <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
+                  Your Auto Rickshaw has been successfully registered under Dad's Auto &amp; Cab fleet in Tamil Nadu. Your digital partner profile is active and ready to accept bookings.
                 </p>
               </div>
 
               {/* Registered Partner Card showing BOTH Driver Photo & Vehicle Photo */}
-              <div className="max-w-md mx-auto bg-slate-900 border-2 border-amber-500/40 rounded-3xl p-5 text-left space-y-4 shadow-xl">
+              <div className="max-w-md mx-auto bg-slate-900/90 border border-slate-800 rounded-3xl p-5 text-left space-y-4 shadow-xl ring-1 ring-white/[0.04]">
                 {/* Driver Photo & Name */}
                 <div className="flex items-center gap-3.5">
                   <img
                     src={avatarUrl}
                     alt={fullName}
-                    className="w-16 h-16 rounded-2xl object-cover border-2 border-amber-500 shadow-md"
+                    className="w-16 h-16 rounded-2xl object-cover ring-1 ring-slate-700 shadow-sm"
                   />
                   <div>
-                    <span className="text-[10px] text-emerald-400 font-extrabold uppercase tracking-wide block">
+                    <span className="text-[10px] text-emerald-400 font-semibold uppercase tracking-wide block">
                       ● Active Duty Driver
                     </span>
-                    <h3 className="font-black text-base text-white">{fullName}</h3>
-                    <p className="text-xs text-amber-400 font-mono font-bold">+91 {mobile}</p>
+                    <h3 className="font-bold text-base text-white">{fullName}</h3>
+                    <p className="text-xs text-slate-300 font-mono">+91 {mobile}</p>
                     <span className="text-[10px] text-slate-400">{district}, Tamil Nadu</span>
                   </div>
                 </div>
 
                 {/* Uploaded Auto Vehicle Photo with Overlay */}
-                <div className="relative w-full h-36 rounded-2xl overflow-hidden border border-slate-700 bg-slate-950">
+                <div className="relative w-full h-36 rounded-2xl overflow-hidden border border-slate-800 bg-slate-950">
                   <img
                     src={vehiclePhotoUrl}
                     alt="Registered Auto Vehicle"
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute top-2 left-2 bg-slate-950/85 backdrop-blur-md px-2.5 py-1 rounded-lg text-xs font-mono font-extrabold text-amber-400 border border-amber-500/40">
+                  <div className="absolute top-2 left-2 bg-slate-900/90 backdrop-blur-md px-2.5 py-1 rounded-lg text-xs font-mono font-semibold text-white border border-slate-800">
                     {regPlate}
                   </div>
-                  <div className="absolute bottom-2 right-2 bg-emerald-500/90 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">
+                  <div className="absolute bottom-2 right-2 bg-emerald-500 text-slate-950 text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase">
                     Verified Vehicle Photo
                   </div>
                 </div>
 
-                <div className="border-t border-slate-800 pt-3 grid grid-cols-2 gap-2 text-xs">
+                <div className="border-t border-slate-800/80 pt-3 grid grid-cols-2 gap-2 text-xs">
                   <div>
                     <span className="text-slate-400 text-[10px] block">Auto Plate</span>
-                    <span className="font-mono font-extrabold text-amber-400 text-sm">
+                    <span className="font-mono font-bold text-white text-sm">
                       {regPlate}
                     </span>
                   </div>
                   <div>
                     <span className="text-slate-400 text-[10px] block">Model</span>
-                    <span className="font-bold text-white text-xs truncate block">
+                    <span className="font-medium text-slate-200 text-xs truncate block">
                       {selectedMakeModel.split(' ')[0]} {fuelType}
                     </span>
                   </div>
                   <div>
                     <span className="text-slate-400 text-[10px] block">Blood Group</span>
-                    <span className="font-bold text-red-400 text-xs">{bloodGroup}</span>
+                    <span className="font-medium text-slate-200 text-xs">{bloodGroup}</span>
                   </div>
                   <div>
                     <span className="text-slate-400 text-[10px] block">Verification</span>
-                    <span className="text-emerald-400 font-extrabold text-xs">
+                    <span className="text-emerald-400 font-semibold text-xs">
                       100% RTO Verified
                     </span>
                   </div>
@@ -1246,10 +1287,10 @@ export const DriverRegisterPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => navigate('/driver')}
-                  className="w-full py-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm shadow-xl flex items-center justify-center gap-2 transition-transform active:scale-95 cursor-pointer"
+                  className="w-full py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-semibold text-sm shadow-sm flex items-center justify-center gap-2 transition-transform active:scale-95 cursor-pointer"
                 >
                   <span>Launch Driver Duty Dashboard</span>
-                  <ArrowRight className="w-4 h-4 stroke-[3]" />
+                  <ArrowRight className="w-4 h-4 stroke-[2.5]" />
                 </button>
               </div>
             </div>
@@ -1259,7 +1300,7 @@ export const DriverRegisterPage: React.FC = () => {
 
       {/* Footer */}
       <footer className="max-w-2xl mx-auto w-full text-center text-xs text-slate-500 py-3">
-        <p>Dad's Auto &amp; Cab • Driver Onboarding &amp; Verification (Tamil Nadu)</p>
+        <p>Dad's Auto &amp; Cab • Driver Onboarding &amp; Fleet Verification (Tamil Nadu)</p>
         <p className="text-[10px] text-slate-600 mt-0.5">
           Regulated under Section 66 of Motor Vehicles Act, 1988 &amp; Tamil Nadu Motor Vehicles Rules
         </p>
