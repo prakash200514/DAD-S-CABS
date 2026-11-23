@@ -12,6 +12,7 @@ interface TamilNaduMapProps {
   interactive?: boolean;
   className?: string;
   onMapClick?: (lat: number, lng: number) => void;
+  onLocateGps?: () => void;
   showCenterControls?: boolean;
 }
 
@@ -24,6 +25,7 @@ export const TamilNaduMap: React.FC<TamilNaduMapProps> = ({
   interactive = true,
   className = 'h-full w-full',
   onMapClick,
+  onLocateGps,
   showCenterControls = true,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -212,46 +214,57 @@ export const TamilNaduMap: React.FC<TamilNaduMapProps> = ({
   }, [pickup, destination, polyline, driverCoords, vehicleType]);
 
   const handleCenterOnLocation = () => {
+    if (onLocateGps) {
+      onLocateGps();
+      return;
+    }
     if (!leafletMapRef.current) return;
     if (pickup) {
-      leafletMapRef.current.setView([pickup.lat, pickup.lng], 14, { animate: true });
+      leafletMapRef.current.setView([pickup.lat, pickup.lng], 15, { animate: true });
     } else if (driverCoords) {
-      leafletMapRef.current.setView([driverCoords.lat, driverCoords.lng], 14, { animate: true });
+      leafletMapRef.current.setView([driverCoords.lat, driverCoords.lng], 15, { animate: true });
     }
   };
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
       {/* Map Container */}
-      <div ref={mapContainerRef} className="h-full w-full z-0" />
+      <div ref={mapContainerRef} className="h-full w-full z-0 cursor-crosshair" />
 
       {/* Floating Status & Engine Pills */}
       <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-20">
-        <div className="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 dark:bg-brand-surface/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-amber-500/30 text-white text-xs shadow-md">
+        <div className="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 dark:bg-brand-surface/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/80 text-white text-xs shadow-md">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           <span className="font-semibold text-amber-400">Tirunelveli</span>
           <span className="text-slate-400">•</span>
-          <span className="text-slate-300">
-            {pickup ? pickup.name : 'Inter-City GPS Active'}
+          <span className="text-slate-300 truncate max-w-[150px]">
+            {pickup ? pickup.name : 'Tap map to set location'}
           </span>
         </div>
 
-        {/* API / Engine status badge */}
-        <div className="pointer-events-auto hidden sm:flex items-center gap-1 bg-slate-900/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-slate-700/60 text-[11px] text-slate-300 shadow">
-          <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-          <span>{googleMapsKey ? 'Google Maps Connected' : 'TN Vector Map Engine'}</span>
-        </div>
+        {/* Locate me quick pill */}
+        {onLocateGps && (
+          <button
+            type="button"
+            onClick={onLocateGps}
+            className="pointer-events-auto flex items-center gap-1.5 bg-slate-900/95 hover:bg-slate-850 backdrop-blur-md px-3 py-1.5 rounded-full border border-emerald-500/40 text-emerald-400 text-xs font-semibold shadow-md transition-all active:scale-95 cursor-pointer"
+          >
+            <Navigation className="w-3.5 h-3.5" />
+            <span>Exact GPS</span>
+          </button>
+        )}
       </div>
 
       {/* Center Controls */}
       {showCenterControls && (
-        <div className="absolute bottom-20 right-3 flex flex-col gap-2 z-20">
+        <div className="absolute bottom-4 right-3 flex flex-col gap-2 z-20">
           <button
+            type="button"
             onClick={handleCenterOnLocation}
-            title="Recenter Map"
-            className="w-10 h-10 rounded-full bg-slate-900/90 dark:bg-brand-surface/90 backdrop-blur-md border border-slate-700/70 text-amber-400 hover:text-amber-300 flex items-center justify-center shadow-lg transition-transform active:scale-95"
+            title="Get Exact GPS Location"
+            className="w-10 h-10 rounded-full bg-slate-900/95 hover:bg-slate-800 backdrop-blur-md border border-slate-700 text-amber-400 hover:text-amber-300 flex items-center justify-center shadow-lg transition-transform active:scale-95 cursor-pointer"
           >
-            <Compass className="w-5 h-5" />
+            <Navigation className="w-4 h-4" />
           </button>
         </div>
       )}

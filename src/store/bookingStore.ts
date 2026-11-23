@@ -3,6 +3,9 @@ import { Booking, BookingStatus, RideVehicleType, TNLocation } from '../types';
 import {
   TAMIL_NADU_LOCATIONS,
   calculateRoute,
+  getBrowserGeolocation,
+  findNearestTirunelveliLocation,
+  fetchRoadRoute,
 } from '../services/locationService';
 import { calculateEstimatedFare } from '../services/fareCalculator';
 import { DEMO_DRIVER } from './authStore';
@@ -105,6 +108,7 @@ interface BookingState {
   // Actions
   setPickup: (location: TNLocation) => void;
   setDestination: (location: TNLocation) => void;
+  useCurrentGpsLocation: () => Promise<boolean>;
   setVehicleType: (type: RideVehicleType) => void;
   setPaymentMethod: (method: 'CASH' | 'UPI') => void;
   swapLocations: () => void;
@@ -153,6 +157,27 @@ export const useBookingStore = create<BookingState>((set, get) => ({
     get().recalculate();
   },
 
+  useCurrentGpsLocation: async () => {
+    try {
+      const coords = await getBrowserGeolocation();
+      const nearest = findNearestTirunelveliLocation(coords.lat, coords.lng);
+      const cleanName = nearest.name.split('(')[0].trim();
+      const gpsLocation: TNLocation = {
+        ...nearest,
+        id: `gps-${Date.now()}`,
+        name: `Current Location (${cleanName})`,
+        lat: coords.lat,
+        lng: coords.lng,
+      };
+      set({ pickup: gpsLocation });
+      get().recalculate();
+      return true;
+    } catch (err) {
+      console.warn('Geolocation could not be obtained:', err);
+      return false;
+    }
+  },
+
   setVehicleType: (vehicleType: RideVehicleType) => {
     set({ vehicleType });
     get().recalculate();
@@ -180,6 +205,21 @@ export const useBookingStore = create<BookingState>((set, get) => ({
       estimatedFare: fare.totalEstimatedFare,
       fareMin: fare.fareRangeMin,
       fareMax: fare.fareRangeMax,
+    });
+
+    // Asynchronously refine with real driving road geometry if available
+    fetchRoadRoute([pickup.lat, pickup.lng], [destination.lat, destination.lng]).then((roadResult) => {
+      if (roadResult && roadResult.polyline.length > 2) {
+        const updatedFare = calculateEstimatedFare(vehicleType, roadResult.distanceKm);
+        set({
+          distanceKm: roadResult.distanceKm,
+          durationMin: roadResult.durationMinutes,
+          routePolyline: roadResult.polyline,
+          estimatedFare: updatedFare.totalEstimatedFare,
+          fareMin: updatedFare.fareRangeMin,
+          fareMax: updatedFare.fareRangeMax,
+        });
+      }
     });
   },
 

@@ -48,7 +48,6 @@ const AUTO_MAKES_MODELS = [
   { make: 'TVS Motor', model: 'TVS King Duramax 225' },
   { make: 'Piaggio', model: 'Piaggio Ape City Plus' },
   { make: 'Piaggio', model: 'Piaggio Ape DX High Mileage' },
-  { make: 'Mahindra Electric', model: 'Mahindra Treo Electric (EV Auto)' },
   { make: 'Atul Auto', model: 'Atul Gemini Dzire Passenger' },
 ];
 
@@ -101,7 +100,7 @@ export const DriverRegisterPage: React.FC = () => {
   // --- Step 2: Detailed Auto Details & Vehicle Photo ---
   const [regPlate, setRegPlate] = useState('TN 72 CK 9204');
   const [selectedMakeModel, setSelectedMakeModel] = useState(AUTO_MAKES_MODELS[0].model);
-  const [fuelType, setFuelType] = useState<'LPG' | 'CNG' | 'PETROL' | 'ELECTRIC'>('LPG');
+  const [fuelType, setFuelType] = useState<'LPG' | 'CNG' | 'PETROL'>('LPG');
   const [mfgYear, setMfgYear] = useState(2023);
   const [seatingCapacity, setSeatingCapacity] = useState(3);
   const [autoColor, setAutoColor] = useState('Yellow & Black (TN Standard)');
@@ -762,8 +761,8 @@ export const DriverRegisterPage: React.FC = () => {
                   <label className="text-xs font-medium text-slate-300 block mb-1">
                     Fuel Type (Certified) *
                   </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {(['LPG', 'CNG', 'PETROL', 'ELECTRIC'] as const).map((type) => (
+                  <div className="grid grid-cols-3 gap-2">
+                    {(['LPG', 'CNG', 'PETROL'] as const).map((type) => (
                       <button
                         key={type}
                         type="button"
@@ -774,7 +773,7 @@ export const DriverRegisterPage: React.FC = () => {
                             : 'bg-slate-900/90 border-slate-800 text-slate-400 hover:text-white'
                         }`}
                       >
-                        {type === 'ELECTRIC' ? '⚡ EV (Electric)' : type}
+                        {type}
                       </button>
                     ))}
                   </div>

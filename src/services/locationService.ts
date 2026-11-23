@@ -240,8 +240,110 @@ export function calculateHaversineDistance(
 }
 
 /**
+ * Finds the nearest landmark in Tirunelveli for any given coordinate (from GPS or map click)
+ */
+export function findNearestTirunelveliLocation(lat: number, lng: number): TNLocation {
+  let nearest = TIRUNELVELI_LOCATIONS[0];
+  let minDistance = calculateHaversineDistance(lat, lng, nearest.lat, nearest.lng);
+
+  for (const loc of TIRUNELVELI_LOCATIONS) {
+    const dist = calculateHaversineDistance(lat, lng, loc.lat, loc.lng);
+    if (dist < minDistance) {
+      minDistance = dist;
+      nearest = loc;
+    }
+  }
+
+  // If within 300 meters of a landmark, return that landmark directly
+  if (minDistance < 0.3) {
+    return { ...nearest, lat, lng };
+  }
+
+  // Otherwise return exact pinned location
+  const cleanName = nearest.name.split('(')[0].trim();
+  return {
+    id: `pin-${Date.now()}`,
+    name: `Near ${cleanName}`,
+    address: `${nearest.address}`,
+    district: 'Tirunelveli',
+    lat,
+    lng,
+    category: 'residential',
+    popular: true,
+  };
+}
+
+/**
+ * Gets real browser GPS Geolocation
+ */
+export function getBrowserGeolocation(): Promise<{ lat: number; lng: number }> {
+  return new Promise((resolve, reject) => {
+    if (typeof window === 'undefined' || !navigator.geolocation) {
+      reject(new Error('Geolocation is not supported by your browser'));
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        resolve({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        });
+      },
+      (err) => {
+        reject(err);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 30000,
+      }
+    );
+  });
+}
+
+/**
+ * Fetches real driving road route from public OSRM router
+ */
+export async function fetchRoadRoute(
+  start: [number, number],
+  end: [number, number]
+): Promise<{ polyline: [number, number][]; distanceKm: number; durationMinutes: number } | null> {
+  try {
+    const url = `https://router.project-osrm.org/route/v1/driving/${start[1]},${start[0]};${end[1]},${end[0]}?overview=full&geometries=geojson`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(4000) });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+      const route = data.routes[0];
+      const polyline: [number, number][] = route.geometry.coordinates.map(
+        (c: [number, number]) => [c[1], c[0]] as [number, number]
+      );
+      const distanceKm = parseFloat((route.distance / 1000).toFixed(1));
+      const durationMinutes = Math.max(5, Math.round(route.duration / 60));
+      return { polyline, distanceKm, durationMinutes };
+    }
+  } catch (e) {
+    // Graceful fallback
+  }
+  return null;
+}
+
+// Accurate real-road waypoints for the benchmark route (Palayamkottai <-> Tirunelveli Junction via Sulochana Mudaliar Bridge & Vannarpettai)
+const PALAYAMKOTTAI_TO_JUNCTION_ROAD_WAYPOINTS: [number, number][] = [
+  [8.7180, 77.7420], // Palayamkottai Bus Stand
+  [8.7190, 77.7395], // VOC Ground Road
+  [8.7208, 77.7360], // Palayamkottai Market Road
+  [8.7225, 77.7315], // Sulochana Mudaliar Bridge (Over Thamirabarani River)
+  [8.7240, 77.7275], // Vannarpettai Bridge Approach
+  [8.7248, 77.7248], // Vannarpettai Roundana
+  [8.7262, 77.7190], // Kokkirakulam Junction / Collectorate
+  [8.7278, 77.7135], // Sripuram Road
+  [8.7290, 77.7080], // Tirunelveli Junction Railway Station
+];
+
+/**
  * Calculates realistic road travel distance & duration within Tirunelveli Inter-City
- * Benchmark route: Palayamkottai to Tirunelveli Junction: 6.8 km, ~15 mins
  */
 export function calculateRoute(
   pickup: TNLocation,
@@ -254,10 +356,15 @@ export function calculateRoute(
 
   let distanceKm: number;
   let durationMinutes: number;
+  let polyline: [number, number][];
 
   if (isPalayamkottaiToJunction) {
     distanceKm = 6.8;
     durationMinutes = 15;
+    polyline =
+      pickup.name.includes('Palayamkottai')
+        ? [...PALAYAMKOTTAI_TO_JUNCTION_ROAD_WAYPOINTS]
+        : [...PALAYAMKOTTAI_TO_JUNCTION_ROAD_WAYPOINTS].reverse();
   } else {
     const rawDistance = calculateHaversineDistance(
       pickup.lat,
@@ -266,20 +373,18 @@ export function calculateRoute(
       destination.lng
     );
 
-    // Realistic road winding factor for Tirunelveli streets (1.32x)
-    distanceKm = Math.max(1.5, parseFloat((rawDistance * 1.32).toFixed(1)));
-
-    // Urban city speed estimation (~24-28 km/h)
+    // Realistic road winding factor for Tirunelveli streets (1.28x)
+    distanceKm = Math.max(1.5, parseFloat((rawDistance * 1.28).toFixed(1)));
     const avgSpeedKmH = 26;
-    durationMinutes = Math.max(6, Math.round((distanceKm / avgSpeedKmH) * 60));
-  }
+    durationMinutes = Math.max(5, Math.round((distanceKm / avgSpeedKmH) * 60));
 
-  // Generate realistic curved polyline points between pickup & destination
-  const polyline = generateCurvedPolyline(
-    [pickup.lat, pickup.lng],
-    [destination.lat, destination.lng],
-    7
-  );
+    // Smooth road line (NO jagged zigzags)
+    polyline = generateSmoothRoadLine(
+      [pickup.lat, pickup.lng],
+      [destination.lat, destination.lng],
+      10
+    );
+  }
 
   return {
     pickup,
@@ -291,12 +396,12 @@ export function calculateRoute(
 }
 
 /**
- * Creates smooth road-like intermediate waypoints between two coordinates
+ * Creates smooth road-like intermediate waypoints following natural road curvature (NO saw-tooth spikes)
  */
-function generateCurvedPolyline(
+function generateSmoothRoadLine(
   start: [number, number],
   end: [number, number],
-  segments: number = 7
+  segments: number = 8
 ): [number, number][] {
   const points: [number, number][] = [start];
   const deltaLat = end[0] - start[0];
@@ -304,9 +409,10 @@ function generateCurvedPolyline(
 
   for (let i = 1; i < segments; i++) {
     const fraction = i / segments;
-    const offset = Math.sin(fraction * Math.PI) * 0.0035 * (i % 2 === 0 ? 1 : -0.7);
+    // Gentle single smooth bow curve reflecting city road grid
+    const offset = Math.sin(fraction * Math.PI) * 0.0012;
     const lat = start[0] + deltaLat * fraction + offset;
-    const lng = start[1] + deltaLng * fraction - offset * 0.5;
+    const lng = start[1] + deltaLng * fraction - offset * 0.4;
     points.push([lat, lng]);
   }
 

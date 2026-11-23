@@ -7,6 +7,7 @@ import { LocationSearchModal } from '../../components/customer/LocationSearchMod
 import { RideCompletedModal } from '../../components/customer/RideCompletedModal';
 import { AiBookingSheet } from '../../components/customer/AiBookingSheet';
 import { TNLocation } from '../../types';
+import { findNearestTirunelveliLocation } from '../../services/locationService';
 import {
   MapPin,
   Search,
@@ -44,12 +45,15 @@ export const CustomerHomePage: React.FC = () => {
     driverCoords,
     setPickup,
     setDestination,
+    useCurrentGpsLocation,
     setVehicleType,
     createBooking,
     cancelActiveBooking,
     completeActiveBooking,
     rateBooking,
   } = useBookingStore();
+
+  const [isLocating, setIsLocating] = useState(false);
 
   // Screen Stages matching the mockup:
   // 'home' | 'route' | 'confirmed' | 'tracking'
@@ -62,6 +66,17 @@ export const CustomerHomePage: React.FC = () => {
   >(null);
   const [isAiSheetOpen, setIsAiSheetOpen] = useState(false);
   const [completedBookingToReview, setCompletedBookingToReview] = useState<any>(null);
+
+  const handleUseLiveGps = async () => {
+    setIsLocating(true);
+    await useCurrentGpsLocation();
+    setIsLocating(false);
+  };
+
+  const handleMapClick = (lat: number, lng: number) => {
+    const loc = findNearestTirunelveliLocation(lat, lng);
+    setPickup(loc);
+  };
 
 
 
@@ -172,7 +187,7 @@ export const CustomerHomePage: React.FC = () => {
               <div className="flex items-center gap-2 font-black text-slate-900">
                 <span className="text-sm">🛺</span>
                 <span>Local Auto Cab</span>
-                <span className="text-[10px] text-slate-500 font-medium">• Tamil Nadu Fleet</span>
+                <span className="text-[10px] text-slate-500 font-medium">• Tirunelveli Inter-City Fleet</span>
               </div>
               <span className="text-[9px] bg-emerald-600 text-white font-extrabold px-2 py-0.5 rounded-full uppercase tracking-tight">
                 Active Now
@@ -182,18 +197,36 @@ export const CustomerHomePage: React.FC = () => {
 
           {/* Location Input Card */}
           <div className="px-5 py-1 z-20">
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 space-y-3 shadow-xs">
-              {/* Pickup field */}
-              <div
-                onClick={() => handleOpenSearch('pickup')}
-                className="flex items-center gap-3 cursor-pointer group hover:bg-white p-1 rounded-xl transition-colors"
-              >
-                <div className="w-3 h-3 rounded-full bg-emerald-500 flex-shrink-0 ring-4 ring-emerald-100"></div>
-                <div className="flex-1 min-w-0">
-                  <span className="text-[10px] text-slate-400 font-medium block">Pickup Location</span>
-                  <p className="text-xs font-bold text-slate-900 truncate">
-                    {pickup.name.includes('Palayamkottai') ? 'Current Location' : pickup.name}
-                  </p>
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 space-y-2.5 shadow-xs">
+              {/* Pickup field with real name and One-Tap Exact GPS button */}
+              <div>
+                <div className="flex items-center justify-between pb-1 px-1">
+                  <span className="text-[10px] text-slate-400 font-medium">Pickup Location</span>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleUseLiveGps();
+                    }}
+                    className="text-[10px] text-emerald-600 hover:text-emerald-700 font-bold flex items-center gap-1 cursor-pointer bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-200 transition-colors"
+                  >
+                    <Navigation className="w-2.5 h-2.5" />
+                    <span>{isLocating ? 'Locating...' : 'Use Exact GPS'}</span>
+                  </button>
+                </div>
+                <div
+                  onClick={() => handleOpenSearch('pickup')}
+                  className="flex items-center gap-3 cursor-pointer group hover:bg-white p-1.5 rounded-xl transition-colors border border-transparent hover:border-slate-200"
+                >
+                  <div className="w-3 h-3 rounded-full bg-emerald-500 flex-shrink-0 ring-4 ring-emerald-100"></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold text-slate-900 truncate">
+                      {pickup.name}
+                    </p>
+                    <span className="text-[10px] text-slate-500 block truncate">
+                      {pickup.address}
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -202,7 +235,7 @@ export const CustomerHomePage: React.FC = () => {
               {/* Destination field */}
               <div
                 onClick={() => handleOpenSearch('destination')}
-                className="flex items-center gap-3 cursor-pointer group hover:bg-white p-1 rounded-xl transition-colors"
+                className="flex items-center gap-3 cursor-pointer group hover:bg-white p-1.5 rounded-xl transition-colors border border-transparent hover:border-slate-200"
               >
                 <div className="w-3 h-3 rounded-full border-2 border-slate-400 flex-shrink-0 ring-4 ring-slate-100"></div>
                 <div className="flex-1 min-w-0">
@@ -210,12 +243,15 @@ export const CustomerHomePage: React.FC = () => {
                   <p className="text-xs font-bold text-slate-900 truncate">
                     {destination.name || 'Enter destination'}
                   </p>
+                  <span className="text-[10px] text-slate-500 block truncate">
+                    {destination.address}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Interactive Map Preview (Fixed Explicit Height, clean OSM tiles) */}
+          {/* Interactive Map Preview (Supports Map Tap & GPS locate) */}
           <div className="mx-5 my-2 rounded-2xl overflow-hidden border border-slate-200 shadow-inner relative h-48 sm:h-52 w-[calc(100%-40px)] flex-shrink-0">
             <TamilNaduMap
               pickup={pickup}
@@ -223,7 +259,9 @@ export const CustomerHomePage: React.FC = () => {
               polyline={routePolyline}
               vehicleType="AUTO"
               interactive={true}
-              showCenterControls={false}
+              showCenterControls={true}
+              onMapClick={handleMapClick}
+              onLocateGps={handleUseLiveGps}
             />
           </div>
 
@@ -247,7 +285,7 @@ export const CustomerHomePage: React.FC = () => {
           <div className="p-5 pt-2">
             <button
               onClick={handleBookRideClick}
-              className="w-full py-4 rounded-full bg-[#F5A623] hover:bg-[#e59b20] active:scale-[0.98] text-slate-950 font-black text-sm shadow-[0_4px_15px_rgba(245,166,35,0.4)] transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 active:scale-[0.98] text-slate-950 font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Book Auto Ride</span>
               <span>→</span>
@@ -269,6 +307,8 @@ export const CustomerHomePage: React.FC = () => {
               polyline={routePolyline}
               vehicleType={vehicleType}
               interactive={true}
+              onMapClick={handleMapClick}
+              onLocateGps={handleUseLiveGps}
             />
           </div>
 
@@ -302,7 +342,7 @@ export const CustomerHomePage: React.FC = () => {
 
             <button
               onClick={handleConfirmRideClick}
-              className="w-full py-4 rounded-full bg-[#F5A623] hover:bg-[#e59b20] active:scale-[0.98] text-slate-950 font-black text-sm shadow-[0_4px_15px_rgba(245,166,35,0.4)] transition-all"
+              className="w-full py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 active:scale-[0.98] text-slate-950 font-bold text-sm shadow-sm transition-all cursor-pointer"
             >
               Confirm Ride
             </button>
