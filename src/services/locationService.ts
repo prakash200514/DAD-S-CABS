@@ -212,6 +212,26 @@ export const TIRUNELVELI_LOCATIONS: TNLocation[] = [
     category: 'residential',
     popular: false,
   },
+  {
+    id: 'tvl-19',
+    name: 'S S V Bhavanam, Thimmarajapuram',
+    address: 'Manapadai Veedu Rd, Thimmarajapuram, Tirunelveli 627002',
+    district: 'Tirunelveli',
+    lat: 8.7168,
+    lng: 77.7325,
+    category: 'residential',
+    popular: true,
+  },
+  {
+    id: 'tvl-20',
+    name: 'CSI Christ Church & Shanthi Nagar',
+    address: 'Sivalaperi Road, Shanthi Nagar, Tirunelveli 627002',
+    district: 'Tirunelveli',
+    lat: 8.7155,
+    lng: 77.7340,
+    category: 'temple',
+    popular: true,
+  },
 ];
 
 // Alias for compatibility

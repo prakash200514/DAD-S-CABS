@@ -22,6 +22,7 @@ interface LocationSearchModalProps {
   currentValue: TNLocation;
   onSelect: (location: TNLocation) => void;
   onClose: () => void;
+  onOpenMap?: () => void;
 }
 
 export const LocationSearchModal: React.FC<LocationSearchModalProps> = ({
@@ -30,6 +31,7 @@ export const LocationSearchModal: React.FC<LocationSearchModalProps> = ({
   currentValue,
   onSelect,
   onClose,
+  onOpenMap,
 }) => {
   const [query, setQuery] = useState('');
   const searchResults = searchTNLocations(query);
@@ -111,6 +113,31 @@ export const LocationSearchModal: React.FC<LocationSearchModalProps> = ({
             </p>
           </div>
         </div>
+
+        {/* Set Pin on Map / Move map to adjust location Action */}
+        {onOpenMap && (
+          <div
+            className="px-4 py-2.5 bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors"
+            onClick={onOpenMap}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                <MapPin className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-gray-900 dark:text-white">
+                  Move map to adjust location
+                </p>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                  Set pin on full screen interactive map
+                </p>
+              </div>
+            </div>
+            <span className="text-[11px] text-amber-700 dark:text-amber-400 font-bold px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20">
+              Open Map ↗
+            </span>
+          </div>
+        )}
 
         {/* List of Tamil Nadu Locations */}
         <div className="flex-1 overflow-y-auto p-2 divide-y divide-gray-100 dark:divide-slate-800/60">

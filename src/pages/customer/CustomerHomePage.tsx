@@ -4,6 +4,7 @@ import { useBookingStore } from '../../store/bookingStore';
 import { useLangStore } from '../../store/langStore';
 import { TamilNaduMap } from '../../components/map/TamilNaduMap';
 import { LocationSearchModal } from '../../components/customer/LocationSearchModal';
+import { AdjustLocationMapModal } from '../../components/customer/AdjustLocationMapModal';
 import { RideCompletedModal } from '../../components/customer/RideCompletedModal';
 import { AiBookingSheet } from '../../components/customer/AiBookingSheet';
 import { TNLocation } from '../../types';
@@ -25,6 +26,7 @@ import {
   AlertTriangle,
   Car,
   X,
+  Maximize2,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -64,8 +66,15 @@ export const CustomerHomePage: React.FC = () => {
   const [searchModalType, setSearchModalType] = useState<
     'pickup' | 'destination' | null
   >(null);
+  const [isAdjustMapOpen, setIsAdjustMapOpen] = useState(false);
+  const [adjustLocationType, setAdjustLocationType] = useState<'pickup' | 'destination'>('pickup');
   const [isAiSheetOpen, setIsAiSheetOpen] = useState(false);
   const [completedBookingToReview, setCompletedBookingToReview] = useState<any>(null);
+
+  const handleOpenAdjustMap = (type: 'pickup' | 'destination' = 'pickup') => {
+    setAdjustLocationType(type);
+    setIsAdjustMapOpen(true);
+  };
 
   const handleUseLiveGps = async () => {
     setIsLocating(true);
@@ -74,8 +83,8 @@ export const CustomerHomePage: React.FC = () => {
   };
 
   const handleMapClick = (lat: number, lng: number) => {
-    const loc = findNearestTirunelveliLocation(lat, lng);
-    setPickup(loc);
+    // When clicking the map preview, open the full-screen interactive location adjuster!
+    handleOpenAdjustMap('pickup');
   };
 
 
@@ -202,17 +211,31 @@ export const CustomerHomePage: React.FC = () => {
               <div>
                 <div className="flex items-center justify-between pb-1 px-1">
                   <span className="text-[10px] text-slate-400 font-medium">Pickup Location</span>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleUseLiveGps();
-                    }}
-                    className="text-[10px] text-emerald-600 hover:text-emerald-700 font-bold flex items-center gap-1 cursor-pointer bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-200 transition-colors"
-                  >
-                    <Navigation className="w-2.5 h-2.5" />
-                    <span>{isLocating ? 'Locating...' : 'Use Exact GPS'}</span>
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenAdjustMap('pickup');
+                      }}
+                      className="text-[10px] text-amber-800 hover:text-amber-900 font-bold flex items-center gap-1 cursor-pointer bg-amber-50 hover:bg-amber-100 px-2 py-0.5 rounded-full border border-amber-200 transition-colors"
+                      title="Move map to adjust pickup location"
+                    >
+                      <MapPin className="w-2.5 h-2.5 text-amber-600" />
+                      <span>Set on Map</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleUseLiveGps();
+                      }}
+                      className="text-[10px] text-emerald-600 hover:text-emerald-700 font-bold flex items-center gap-1 cursor-pointer bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-200 transition-colors"
+                    >
+                      <Navigation className="w-2.5 h-2.5" />
+                      <span>{isLocating ? 'Locating...' : 'Use Exact GPS'}</span>
+                    </button>
+                  </div>
                 </div>
                 <div
                   onClick={() => handleOpenSearch('pickup')}
@@ -233,26 +256,63 @@ export const CustomerHomePage: React.FC = () => {
               <div className="border-t border-slate-200 mx-1"></div>
 
               {/* Destination field */}
-              <div
-                onClick={() => handleOpenSearch('destination')}
-                className="flex items-center gap-3 cursor-pointer group hover:bg-white p-1.5 rounded-xl transition-colors border border-transparent hover:border-slate-200"
-              >
-                <div className="w-3 h-3 rounded-full border-2 border-slate-400 flex-shrink-0 ring-4 ring-slate-100"></div>
-                <div className="flex-1 min-w-0">
-                  <span className="text-[10px] text-slate-400 font-medium block">Destination</span>
-                  <p className="text-xs font-bold text-slate-900 truncate">
-                    {destination.name || 'Enter destination'}
-                  </p>
-                  <span className="text-[10px] text-slate-500 block truncate">
-                    {destination.address}
-                  </span>
+              <div>
+                <div className="flex items-center justify-between pb-1 px-1">
+                  <span className="text-[10px] text-slate-400 font-medium">Destination</span>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOpenAdjustMap('destination');
+                    }}
+                    className="text-[10px] text-slate-700 hover:text-slate-900 font-bold flex items-center gap-1 cursor-pointer bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded-full border border-slate-200 transition-colors"
+                    title="Move map to set destination"
+                  >
+                    <MapPin className="w-2.5 h-2.5 text-slate-500" />
+                    <span>Set on Map</span>
+                  </button>
+                </div>
+                <div
+                  onClick={() => handleOpenSearch('destination')}
+                  className="flex items-center gap-3 cursor-pointer group hover:bg-white p-1.5 rounded-xl transition-colors border border-transparent hover:border-slate-200"
+                >
+                  <div className="w-3 h-3 rounded-full border-2 border-slate-400 flex-shrink-0 ring-4 ring-slate-100"></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold text-slate-900 truncate">
+                      {destination.name || 'Enter destination'}
+                    </p>
+                    <span className="text-[10px] text-slate-500 block truncate">
+                      {destination.address}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Interactive Map Preview (Supports Map Tap & GPS locate) */}
-          <div className="mx-5 my-2 rounded-2xl overflow-hidden border border-slate-200 shadow-inner relative h-48 sm:h-52 w-[calc(100%-40px)] flex-shrink-0">
+          {/* Interactive Map Preview (Supports Map Tap & Full Screen Expand) */}
+          <div
+            onClick={() => handleOpenAdjustMap('pickup')}
+            className="mx-5 my-2 rounded-2xl overflow-hidden border border-slate-200 shadow-inner relative h-48 sm:h-52 w-[calc(100%-40px)] flex-shrink-0 cursor-pointer group"
+          >
+            {/* Top Right "Full Screen Map" Button Matching User Reference */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpenAdjustMap('pickup');
+              }}
+              className="absolute top-2.5 right-2.5 z-20 bg-slate-900/90 hover:bg-slate-950 text-white font-bold text-[10px] px-2.5 py-1.5 rounded-full shadow-lg border border-slate-700/80 flex items-center gap-1.5 transition-transform active:scale-95 cursor-pointer backdrop-blur-xs"
+            >
+              <Maximize2 className="w-3 h-3 text-[#F5A623]" />
+              <span>Full Screen Map</span>
+            </button>
+
+            {/* Tap hint banner */}
+            <div className="absolute bottom-2 left-2 z-20 bg-white/90 dark:bg-slate-900/90 text-slate-800 dark:text-slate-200 text-[10px] font-semibold px-2 py-0.5 rounded-md shadow-xs pointer-events-none backdrop-blur-xs border border-slate-200 dark:border-slate-800">
+              Tap map to adjust location
+            </div>
+
             <TamilNaduMap
               pickup={pickup}
               destination={destination}
@@ -560,6 +620,30 @@ export const CustomerHomePage: React.FC = () => {
         currentValue={searchModalType === 'pickup' ? pickup : destination}
         onSelect={handleSelectLocation}
         onClose={() => setSearchModalType(null)}
+        onOpenMap={() => {
+          const type = searchModalType || 'pickup';
+          setSearchModalType(null);
+          handleOpenAdjustMap(type);
+        }}
+      />
+
+      {/* Full-Screen "Move map to adjust location" Modal (Matching User's Reference) */}
+      <AdjustLocationMapModal
+        isOpen={isAdjustMapOpen}
+        onClose={() => setIsAdjustMapOpen(false)}
+        initialLocation={adjustLocationType === 'pickup' ? pickup : destination}
+        onConfirm={(loc) => {
+          if (adjustLocationType === 'pickup') {
+            setPickup(loc);
+          } else {
+            setDestination(loc);
+          }
+        }}
+        title={
+          adjustLocationType === 'pickup'
+            ? 'Move map to adjust location'
+            : 'Move map to set destination'
+        }
       />
 
       <AiBookingSheet
