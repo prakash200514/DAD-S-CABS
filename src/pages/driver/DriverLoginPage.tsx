@@ -70,7 +70,7 @@ export const DriverLoginPage: React.FC = () => {
               Dad's <span className="text-amber-400 font-bold">Auto &amp; Cab</span>
             </h1>
             <span className="text-[11px] text-slate-400 font-medium block">
-              Driver Partner Portal • Tamil Nadu
+              Driver Partner Portal • Tirunelveli
             </span>
           </div>
         </div>
@@ -115,13 +115,13 @@ export const DriverLoginPage: React.FC = () => {
           <div className="space-y-1.5 text-center">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-800 text-slate-300 text-[11px] font-medium tracking-wide">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              Verified Driver Portal
+              Verified Tirunelveli Driver Portal
             </div>
             <h2 className="text-2xl font-bold text-white tracking-tight pt-1">
               Vanakkam, Driver Partner!
             </h2>
             <p className="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed">
-              Sign in to accept passenger booking requests, track earnings, and navigate local routes across Tamil Nadu.
+              Sign in to accept passenger booking requests, track earnings, and navigate local routes across Tirunelveli city.
             </p>
           </div>
 
@@ -219,17 +219,17 @@ export const DriverLoginPage: React.FC = () => {
           <div className="p-4 rounded-2xl bg-slate-900/50 border border-slate-800 text-center space-y-2.5">
             <div className="flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-200">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>New Auto Rickshaw Driver?</span>
+              <span>New Tirunelveli Auto Driver?</span>
             </div>
             <p className="text-[11px] text-slate-400 leading-relaxed max-w-xs mx-auto">
-              Join Tamil Nadu's zero-commission auto fleet. Register your specs, upload Bio Data &amp; Legal Docs, and verify mobile via SMS OTP.
+              Join Tirunelveli's zero-commission auto fleet. Register with your TN 72 RC, Driving Licence, and vehicle details.
             </p>
             <button
               type="button"
               onClick={() => navigate('/driver/register')}
               className="w-full py-2.5 rounded-xl border border-slate-700/80 hover:border-slate-600 bg-slate-800/60 hover:bg-slate-800 text-slate-200 hover:text-white font-medium text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
-              <span>Register Auto &amp; Join Fleet →</span>
+              <span>Register TN 72 Auto &amp; Join Fleet →</span>
             </button>
           </div>
 
@@ -241,7 +241,7 @@ export const DriverLoginPage: React.FC = () => {
               className="w-full py-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800/80 text-xs font-medium text-slate-400 hover:text-slate-200 border border-slate-800/80 flex items-center justify-center gap-2 transition-colors cursor-pointer"
             >
               <Compass className="w-3.5 h-3.5 text-amber-400" />
-              <span>One-Tap Demo Login: Ravi Kumar (TN 72 AB 4587)</span>
+              <span>One-Tap Demo Login: Ravi Kumar (TN 72 AB 4587 - Tirunelveli)</span>
             </button>
           </div>
 
@@ -261,9 +261,9 @@ export const DriverLoginPage: React.FC = () => {
 
       {/* Footer */}
       <footer className="max-w-md mx-auto w-full text-center text-xs text-slate-500 py-3">
-        <p>Dad's Auto &amp; Cab • Driver Partner Network (Tamil Nadu)</p>
+        <p>Dad's Auto &amp; Cab • Tirunelveli Fleet Network (TN 72)</p>
         <p className="text-[10px] text-slate-600 mt-0.5">
-          For driver registration assistance, dial safety desk: +91 94431 87654
+          For driver registration assistance in Tirunelveli, call: +91 94431 87654
         </p>
       </footer>
     </div>

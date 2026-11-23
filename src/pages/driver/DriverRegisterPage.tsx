@@ -23,25 +23,24 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-const TN_DISTRICTS = [
-  'Tirunelveli',
-  'Tenkasi',
-  'Madurai',
-  'Chennai',
-  'Coimbatore',
-  'Tiruchirappalli',
-  'Salem',
-  'Erode',
-  'Tiruppur',
-  'Thoothukudi (Tuticorin)',
-  'Kanyakumari (Nagercoil)',
-  'Dindigul',
-  'Thanjavur',
-  'Vellore',
-  'Cuddalore',
-  'Karur',
-  'Virudhunagar',
+const TIRUNELVELI_ZONES = [
+  'Palayamkottai (Market & Bus Stand)',
+  'Tirunelveli Junction (Station & Sripuram)',
+  'Tirunelveli Town (Nellaiappar Temple / Car Streets)',
+  'Vannarpettai & Bypass Roundana',
+  'Melapalayam (Main Bazaar & Market)',
+  'Tirunelveli New Bus Stand (Veinthaankulam)',
+  'High Ground (Medical College & District Court)',
+  'Pettai & Industrial Estate',
+  'Thatchanallur & Madurai Bypass',
+  'Perumalpuram & NGO Colony',
+  'Maharajanagar & St. Xavier’s Colony',
+  'Samathanapuram & V.M. Chatram',
+  'Kokkirakulam & Collectorate',
+  'Reddiarpatti Hill View Area',
 ];
+
+const TN_DISTRICTS = TIRUNELVELI_ZONES;
 
 const AUTO_MAKES_MODELS = [
   { make: 'Bajaj Auto', model: 'Bajaj Compact RE 4S (Standard)' },
@@ -573,17 +572,17 @@ export const DriverRegisterPage: React.FC = () => {
                   </select>
                 </div>
 
-                {/* District in TN */}
+                {/* Operating Area in Tirunelveli */}
                 <div>
                   <label className="text-xs font-medium text-slate-300 block mb-1">
-                    Operating District (Tamil Nadu) *
+                    Primary Operating Area (Tirunelveli City) *
                   </label>
                   <select
                     value={district}
                     onChange={(e) => setDistrict(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-white focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 outline-none transition-all font-medium"
                   >
-                    {TN_DISTRICTS.map((d) => (
+                    {TIRUNELVELI_ZONES.map((d) => (
                       <option key={d} value={d}>
                         {d}
                       </option>
@@ -736,7 +735,7 @@ export const DriverRegisterPage: React.FC = () => {
                     className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-100 font-mono font-semibold focus:border-amber-400/80 focus:ring-1 focus:ring-amber-400/20 outline-none uppercase transition-all tracking-wider"
                   />
                   <span className="text-[10px] text-slate-500 mt-1 block">
-                    Must start with TN followed by RTO code (e.g. TN 72, TN 59, TN 01)
+                    Must be registered under TN 72 (Tirunelveli RTO Auto Permit)
                   </span>
                 </div>
 
@@ -1218,7 +1217,7 @@ export const DriverRegisterPage: React.FC = () => {
                   Driver Partner Registered
                 </h2>
                 <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
-                  Your Auto Rickshaw has been successfully registered under Dad's Auto &amp; Cab fleet in Tamil Nadu. Your digital partner profile is active and ready to accept bookings.
+                  Your Auto Rickshaw has been successfully registered under Dad's Auto &amp; Cab fleet in Tirunelveli. Your digital partner profile is active and ready to accept bookings.
                 </p>
               </div>
 
@@ -1300,9 +1299,9 @@ export const DriverRegisterPage: React.FC = () => {
 
       {/* Footer */}
       <footer className="max-w-2xl mx-auto w-full text-center text-xs text-slate-500 py-3">
-        <p>Dad's Auto &amp; Cab • Driver Onboarding &amp; Fleet Verification (Tamil Nadu)</p>
+        <p>Dad's Auto &amp; Cab • Driver Onboarding &amp; Fleet Verification (Tirunelveli, Tamil Nadu)</p>
         <p className="text-[10px] text-slate-600 mt-0.5">
-          Regulated under Section 66 of Motor Vehicles Act, 1988 &amp; Tamil Nadu Motor Vehicles Rules
+          Regulated under Section 66 of Motor Vehicles Act, 1988 &amp; TN 72 Motor Vehicles Rules
         </p>
       </footer>
     </div>

@@ -126,10 +126,10 @@ export function queryAdminBusinessAi(question: string): string {
   if (q.includes('earn') || q.includes('revenue') || q.includes('income')) {
     if (q.includes('week') || q.includes('this week')) {
       const weeklyTotal = analytics.weeklyRevenue.reduce((acc, curr) => acc + curr.revenue, 0);
-      return `This week, Dad's Auto & Cab generated ₹${weeklyTotal.toLocaleString('en-IN')} across Tamil Nadu operations. Saturday was your peak revenue day with ₹21,400.`;
+      return `This week, Dad's Auto & Cab generated ₹${weeklyTotal.toLocaleString('en-IN')} across Tirunelveli operations. Saturday was your peak revenue day with ₹21,400.`;
     }
     if (q.includes('today')) {
-      return `Today's revenue is ₹${analytics.totalRevenue.toLocaleString('en-IN')} from ${analytics.totalTrips} completed trips across active Tamil Nadu fleets.`;
+      return `Today's revenue is ₹${analytics.totalRevenue.toLocaleString('en-IN')} from ${analytics.totalTrips} completed trips across active Tirunelveli fleets.`;
     }
     return `Total platform earnings recorded to date: ₹${analytics.totalRevenue.toLocaleString('en-IN')}, with an average fare of ₹${analytics.averageFare} per completed trip.`;
   }

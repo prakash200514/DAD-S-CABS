@@ -59,7 +59,7 @@ export const LocationSearchModal: React.FC<LocationSearchModalProps> = ({
               {type === 'pickup' ? 'Select Pickup Point' : 'Choose Destination'}
             </h3>
             <p className="text-xs text-amber-500 font-medium">
-              Tamil Nadu Locations Only
+              Tirunelveli Inter-City Only
             </p>
           </div>
           <button
@@ -79,7 +79,7 @@ export const LocationSearchModal: React.FC<LocationSearchModalProps> = ({
               autoFocus
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search Palayamkottai, Junction, Chennai, Madurai..."
+              placeholder="Search Palayamkottai, Junction, Town, New Bus Stand..."
               className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-gray-100 dark:bg-slate-900/80 border border-transparent focus:border-amber-500 text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none transition-all"
             />
             {query && (
@@ -153,10 +153,10 @@ export const LocationSearchModal: React.FC<LocationSearchModalProps> = ({
             <div className="text-center py-8">
               <MapPin className="w-8 h-8 text-gray-400 mx-auto mb-2 opacity-50" />
               <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                No Tamil Nadu location found matching "{query}"
+                No Tirunelveli location found matching "{query}"
               </p>
               <p className="text-xs text-gray-400 mt-1">
-                Version 1 is exclusively tailored for all Tamil Nadu districts.
+                Version 1 is exclusively tailored for Tirunelveli Inter-City routes.
               </p>
             </div>
           )}

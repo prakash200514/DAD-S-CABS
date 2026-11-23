@@ -71,16 +71,16 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         </div>
       </div>
 
-      {/* Subtle, refined "Proudly Serving Tamil Nadu" Pill Badge */}
+      {/* Subtle, refined "Serving Tirunelveli" Pill Badge */}
       {showBadge && (
         <div className="hidden sm:flex items-center gap-2 bg-slate-900/90 border border-slate-800 px-3 py-1.5 rounded-xl text-slate-300 text-xs">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           <div className="text-left">
             <span className="block text-[9px] uppercase tracking-wider text-slate-400 font-semibold leading-tight">
-              Proudly Serving
+              Inter-City Fleet
             </span>
             <span className="block text-xs font-bold text-white leading-tight">
-              Tamil Nadu
+              Tirunelveli
             </span>
           </div>
         </div>

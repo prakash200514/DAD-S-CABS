@@ -68,7 +68,7 @@ export const AiBookingSheet: React.FC<AiBookingSheetProps> = ({
                 Dad's AI Ride Assistant
               </h3>
               <p className="text-[11px] text-amber-500 font-medium">
-                Natural Language Booking • Tamil Nadu
+                Natural Language Booking • Tirunelveli Inter-City
               </p>
             </div>
           </div>
@@ -83,7 +83,7 @@ export const AiBookingSheet: React.FC<AiBookingSheetProps> = ({
         {/* Prompt Input */}
         <div>
           <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 block mb-1.5">
-            Tell the AI where you want to go in Tamil Nadu:
+            Tell the AI where you want to go in Tirunelveli:
           </label>
           <div className="relative">
             <textarea

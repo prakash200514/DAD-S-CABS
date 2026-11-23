@@ -21,7 +21,7 @@ export const RideSelector: React.FC<RideSelectorProps> = ({
     <div className="space-y-3">
       <div className="flex items-center justify-between px-1">
         <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-          Available Ride • Tamil Nadu
+          Available Auto • Tirunelveli
         </h4>
         <span className="text-xs font-semibold text-amber-500 flex items-center gap-1">
           <Zap className="w-3 h-3" />

@@ -51,7 +51,7 @@ export const DriverDashboardPage: React.FC = () => {
         </h2>
         <div className="relative w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-300">
           <Bell className="w-4 h-4" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#F5A623]"></span>
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-400"></span>
         </div>
       </div>
 
@@ -62,12 +62,12 @@ export const DriverDashboardPage: React.FC = () => {
             <img
               src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=160&q=80"
               alt="Ravi Kumar"
-              className="w-12 h-12 rounded-full object-cover border-2 border-[#F5A623]"
+              className="w-12 h-12 rounded-full object-cover ring-2 ring-amber-400/60"
             />
             <div>
               <h3 className="font-extrabold text-sm text-white">Ravi Kumar</h3>
               <p className="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5">
-                <span className="text-[#F5A623] font-bold">★ 4.8</span>
+                <span className="text-amber-400 font-bold">★ 4.8</span>
                 <span>•</span>
                 <span className={isOnline ? 'text-emerald-400 font-bold' : 'text-slate-500'}>
                   {isOnline ? 'Online' : 'Offline'}
@@ -95,7 +95,7 @@ export const DriverDashboardPage: React.FC = () => {
           </div>
 
           <div className="bg-[#171F2B] border border-slate-800 p-3 rounded-2xl">
-            <span className="text-lg font-black text-[#F5A623] block">₹2,340</span>
+            <span className="text-lg font-black text-amber-400 block">₹2,340</span>
             <span className="text-[10px] text-slate-400 font-semibold">Today</span>
           </div>
 
@@ -122,7 +122,7 @@ export const DriverDashboardPage: React.FC = () => {
           /* New Ride Request Card */
           <div className="bg-[#171F2B] border border-slate-800 rounded-3xl p-5 shadow-2xl space-y-4 animate-in zoom-in-95">
             <div>
-              <span className="text-xs font-bold text-[#F5A623] uppercase tracking-wider block mb-1">
+              <span className="text-xs font-semibold text-amber-400 uppercase tracking-wider block mb-1">
                 New Ride Request
               </span>
               <h4 className="text-sm font-extrabold text-white">

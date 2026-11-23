@@ -229,10 +229,10 @@ export const TamilNaduMap: React.FC<TamilNaduMapProps> = ({
       <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-20">
         <div className="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 dark:bg-brand-surface/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-amber-500/30 text-white text-xs shadow-md">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span className="font-semibold text-amber-400">Tamil Nadu</span>
+          <span className="font-semibold text-amber-400">Tirunelveli</span>
           <span className="text-slate-400">•</span>
           <span className="text-slate-300">
-            {pickup ? pickup.district : 'Live GPS Active'}
+            {pickup ? pickup.name : 'Inter-City GPS Active'}
           </span>
         </div>
 

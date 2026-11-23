@@ -10,6 +10,7 @@ import {
   Phone,
   Clock,
   CheckCircle2,
+  Check,
   Users,
   Star,
   Award,
@@ -21,10 +22,11 @@ import {
   Search,
 } from 'lucide-react';
 
-// Popular Tamil Nadu Commercial Routes for Live Estimator
-const TN_POPULAR_ROUTES = [
+// Curated Tirunelveli Inter-City Local Routes for Estimator
+const TIRUNELVELI_ROUTES = [
   {
     city: 'Tirunelveli',
+    label: 'Palayamkottai ➔ Junction',
     pickup: 'Palayamkottai Bus Stand',
     destination: 'Tirunelveli Junction',
     distance: 6.8,
@@ -33,76 +35,85 @@ const TN_POPULAR_ROUTES = [
     fareMax: 145,
   },
   {
-    city: 'Madurai',
-    pickup: 'Madurai Junction Station',
-    destination: 'Meenakshi Temple',
+    city: 'Tirunelveli',
+    label: 'New Bus Stand ➔ Town',
+    pickup: 'Tirunelveli New Bus Stand',
+    destination: 'Nellaiappar Temple (Town)',
+    distance: 7.5,
+    duration: 18,
+    fareMin: 135,
+    fareMax: 160,
+  },
+  {
+    city: 'Tirunelveli',
+    label: 'Vannarpettai ➔ Melapalayam',
+    pickup: 'Vannarpettai Roundana',
+    destination: 'Melapalayam Main Bazaar',
     distance: 4.2,
-    duration: 12,
+    duration: 11,
     fareMin: 85,
     fareMax: 105,
   },
   {
-    city: 'Coimbatore',
-    pickup: 'Gandhipuram Bus Stand',
-    destination: 'Coimbatore Airport',
-    distance: 10.4,
-    duration: 24,
-    fareMin: 185,
-    fareMax: 215,
+    city: 'Tirunelveli',
+    label: 'Junction ➔ High Ground',
+    pickup: 'Tirunelveli Junction',
+    destination: 'Medical College (High Ground)',
+    distance: 5.4,
+    duration: 14,
+    fareMin: 100,
+    fareMax: 125,
   },
   {
-    city: 'Chennai',
-    pickup: 'Chennai Central',
-    destination: 'T. Nagar Panagal Park',
-    distance: 8.5,
-    duration: 22,
-    fareMin: 155,
-    fareMax: 180,
+    city: 'Tirunelveli',
+    label: 'Thatchanallur ➔ Palayamkottai',
+    pickup: 'Thatchanallur Market',
+    destination: 'Palayamkottai Market',
+    distance: 8.2,
+    duration: 20,
+    fareMin: 150,
+    fareMax: 175,
+  },
+  {
+    city: 'Tirunelveli',
+    label: 'Pettai ➔ Junction',
+    pickup: 'Pettai Industrial Estate',
+    destination: 'Tirunelveli Junction',
+    distance: 5.1,
+    duration: 13,
+    fareMin: 95,
+    fareMax: 120,
   },
 ];
 
-// Commercial Fleet Tiers (Auto Rickshaws Only)
-const COMMERCIAL_FLEET = [
-  {
-    id: 'auto-std',
-    title: "Standard City Auto",
-    subtitle: 'Bajaj Compact RE 4S',
-    passengers: '3 Passengers',
-    luggage: '2 Medium Bags',
-    fuel: 'CNG / LPG Metered',
-    baseFare: '₹35',
-    perKm: '₹15 / km',
-    description: 'The standard commercial auto rickshaw for fast intra-city transit, railway station transfers, and daily commutes.',
-    image: '/assets/auto_rickshaw_card.jpg',
-  },
-  {
-    id: 'auto-ev',
-    title: "Green EV Auto",
-    subtitle: 'Mahindra Treo Electric',
-    passengers: '3 Passengers',
-    luggage: '2 Medium Bags',
-    fuel: '100% Zero-Emission EV',
-    baseFare: '₹35',
-    perKm: '₹14 / km',
-    description: 'Ultra-silent, vibration-free electric ride with modern suspension. Clean and sustainable travel across Tamil Nadu.',
-    image: '/assets/tn_auto_temple_hero.jpg',
-  },
-];
+// Commercial Fleet Specification (Auto Rickshaw Only)
+const COMMERCIAL_VEHICLE = {
+  id: 'auto-std',
+  title: "Tirunelveli City Auto Rickshaw",
+  subtitle: 'Bajaj Compact RE 4S • TN 72 Certified Commercial Auto',
+  passengers: '3 Passengers',
+  luggage: '2-3 Luggage Bags',
+  fuel: 'LPG / CNG Metered',
+  baseFare: '₹35',
+  perKm: '₹15 / km',
+  description: 'The iconic, dependable commercial auto rickshaw for fast intra-city transit across Tirunelveli. Perfect for railway station transfers, temple visits, market shopping, and everyday city commutes.',
+  image: '/assets/auto_rickshaw_card.jpg',
+};
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
 
   // Route selector
   const [selectedRouteIdx, setSelectedRouteIdx] = useState(0);
-  const selectedRoute = TN_POPULAR_ROUTES[selectedRouteIdx];
+  const selectedRoute = TIRUNELVELI_ROUTES[selectedRouteIdx];
 
   const [pickupText, setPickupText] = useState(selectedRoute.pickup);
   const [destText, setDestText] = useState(selectedRoute.destination);
 
   const handleSelectRoute = (idx: number) => {
     setSelectedRouteIdx(idx);
-    setPickupText(TN_POPULAR_ROUTES[idx].pickup);
-    setDestText(TN_POPULAR_ROUTES[idx].destination);
+    setPickupText(TIRUNELVELI_ROUTES[idx].pickup);
+    setDestText(TIRUNELVELI_ROUTES[idx].destination);
   };
 
   const handleBookNow = () => {
@@ -110,27 +121,27 @@ export const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#090D14] text-slate-100 selection:bg-amber-400 selection:text-slate-950 flex flex-col justify-between">
+    <div className="min-h-screen bg-[#090D14] text-white selection:bg-amber-400 selection:text-slate-950 font-sans antialiased">
       {/* ------------------------------------------------------------------ */}
-      {/* 1. CLEAN COMMERCIAL NAVIGATION BAR                                */}
+      {/* 1. CLEAN COMMERCIAL NAVIGATION BAR                                 */}
       {/* ------------------------------------------------------------------ */}
-      <header className="border-b border-slate-800/60 sticky top-0 z-40 bg-[#090D14]/90 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
-          <BrandLogo size="md" showBadge={true} />
+      <header className="sticky top-0 z-40 bg-[#090D14]/90 backdrop-blur-md border-b border-slate-800/80 px-4 sm:px-6 py-3.5">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <BrandLogo size="md" showTagline={false} showBadge={true} />
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-8 text-xs font-semibold text-slate-300">
+          {/* Minimalist Centered Nav Links */}
+          <nav className="hidden md:flex items-center gap-7 text-xs font-medium text-slate-300">
             <a href="#how-it-works" className="hover:text-white transition-colors">
               How it Works
             </a>
             <a href="#fleet" className="hover:text-white transition-colors">
-              Fleet
+              Tirunelveli Fleet
             </a>
             <a href="#pricing" className="hover:text-white transition-colors">
               Meter Pricing
             </a>
             <a href="#driver-partner" className="hover:text-white transition-colors">
-              Drive with Us
+              Drive in Tirunelveli
             </a>
           </nav>
 
@@ -152,7 +163,7 @@ export const LandingPage: React.FC = () => {
 
             <button
               onClick={handleBookNow}
-              className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-semibold text-xs sm:text-sm transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
             >
               <span>Book Auto</span>
               <ArrowRight className="w-4 h-4 stroke-[2.5]" />
@@ -169,25 +180,25 @@ export const LandingPage: React.FC = () => {
           {/* Left Column: Clear, Confident Messaging & Ride Box */}
           <div className="lg:col-span-7 space-y-8">
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700/60 text-slate-300 text-xs font-medium">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 text-xs font-medium">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>Active Across Tamil Nadu Local Routes</span>
+                <span>Dedicated Inter-City Auto Fleet for Tirunelveli</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.12]">
-                Safe local auto rides, <br />
+                Safe Tirunelveli auto rides, <br />
                 <span className="text-slate-400 font-normal">at genuine meter rates.</span>
               </h1>
 
               <p className="text-base sm:text-lg text-slate-300 max-w-lg leading-relaxed">
-                Zero surge pricing, certified local auto drivers, and direct payments to pilots. Book your auto rickshaw in seconds.
+                Zero surge pricing, certified local TN 72 auto drivers, and direct payments to pilots. Connecting Palayamkottai, Junction, Town, New Bus Stand, Melapalayam, Pettai, and all Tirunelveli wards.
               </p>
             </div>
 
             {/* Clean Uber-style Ride Booking Card */}
-            <div className="bg-[#101520] border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4 max-w-xl">
+            <div className="bg-[#101520] border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4 max-w-xl ring-1 ring-white/[0.03]">
               <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">
-                Plan Your Ride
+                Plan Your Tirunelveli Trip
               </span>
 
               {/* Pickup & Destination Inputs */}
@@ -195,12 +206,12 @@ export const LandingPage: React.FC = () => {
                 <div className="flex items-center gap-3 bg-slate-900/90 border border-slate-800 rounded-2xl px-4 py-3">
                   <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 flex-shrink-0"></div>
                   <div className="flex-1 min-w-0">
-                    <span className="text-[10px] text-slate-500 font-medium block">Pickup Point</span>
+                    <span className="text-[10px] text-slate-500 font-medium block">Pickup Point (Tirunelveli)</span>
                     <input
                       type="text"
                       value={pickupText}
                       onChange={(e) => setPickupText(e.target.value)}
-                      placeholder="Enter pickup location in Tamil Nadu"
+                      placeholder="e.g. Palayamkottai Bus Stand, Junction..."
                       className="w-full bg-transparent text-xs font-semibold text-white outline-none"
                     />
                   </div>
@@ -209,12 +220,12 @@ export const LandingPage: React.FC = () => {
                 <div className="flex items-center gap-3 bg-slate-900/90 border border-slate-800 rounded-2xl px-4 py-3">
                   <div className="w-2.5 h-2.5 rounded-full bg-amber-400 flex-shrink-0"></div>
                   <div className="flex-1 min-w-0">
-                    <span className="text-[10px] text-slate-500 font-medium block">Destination</span>
+                    <span className="text-[10px] text-slate-500 font-medium block">Destination (Tirunelveli)</span>
                     <input
                       type="text"
                       value={destText}
                       onChange={(e) => setDestText(e.target.value)}
-                      placeholder="Enter destination in Tamil Nadu"
+                      placeholder="e.g. Nellaiappar Temple, New Bus Stand..."
                       className="w-full bg-transparent text-xs font-semibold text-white outline-none"
                     />
                   </div>
@@ -223,20 +234,20 @@ export const LandingPage: React.FC = () => {
 
               {/* Quick Route Selector Chips */}
               <div className="space-y-1.5 pt-1">
-                <span className="text-[11px] text-slate-400">Popular Routes:</span>
+                <span className="text-[11px] text-slate-400">Popular Tirunelveli Routes:</span>
                 <div className="flex flex-wrap gap-1.5">
-                  {TN_POPULAR_ROUTES.map((route, idx) => (
+                  {TIRUNELVELI_ROUTES.map((route, idx) => (
                     <button
                       key={idx}
                       type="button"
                       onClick={() => handleSelectRoute(idx)}
-                      className={`text-[11px] px-3 py-1.5 rounded-xl border transition-colors ${
+                      className={`text-[11px] px-3 py-1.5 rounded-xl border transition-colors cursor-pointer ${
                         selectedRouteIdx === idx
-                          ? 'bg-amber-500/10 border-amber-500/50 text-amber-300 font-semibold'
+                          ? 'bg-amber-400/10 border-amber-400/40 text-amber-300 font-semibold'
                           : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200'
                       }`}
                     >
-                      {route.city}: {route.destination.split(' ')[0]}
+                      {route.label}
                     </button>
                   ))}
                 </div>
@@ -245,7 +256,7 @@ export const LandingPage: React.FC = () => {
               {/* Fare & CTA Row */}
               <div className="pt-3 border-t border-slate-800/80 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
                 <div>
-                  <span className="text-[10px] text-slate-500 uppercase font-semibold block">Estimated Meter Fare</span>
+                  <span className="text-[10px] text-slate-500 uppercase font-semibold block">Tirunelveli Meter Fare</span>
                   <div className="flex items-baseline gap-2">
                     <span className="text-xl font-bold text-white font-mono">
                       ₹{selectedRoute.fareMin} – ₹{selectedRoute.fareMax}
@@ -258,7 +269,7 @@ export const LandingPage: React.FC = () => {
 
                 <button
                   onClick={handleBookNow}
-                  className="px-6 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                  className="px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-semibold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                 >
                   <span>Book This Auto</span>
                   <ArrowRight className="w-4 h-4 stroke-[2.5]" />
@@ -270,7 +281,7 @@ export const LandingPage: React.FC = () => {
             <div className="flex flex-wrap items-center gap-6 text-xs text-slate-400 pt-1">
               <div className="flex items-center gap-1.5">
                 <Check className="w-4 h-4 text-emerald-400" />
-                <span>Government Meter Rates</span>
+                <span>TN 72 Government Meter Rates</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <Check className="w-4 h-4 text-emerald-400" />
@@ -288,22 +299,22 @@ export const LandingPage: React.FC = () => {
             <div className="relative rounded-3xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
               <img
                 src="/assets/tn_auto_temple_hero.jpg"
-                alt="Dad's Auto in Tamil Nadu"
+                alt="Dad's Auto in Tirunelveli"
                 className="w-full h-80 sm:h-96 object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
 
               {/* Floating Quality Pill */}
-              <div className="absolute bottom-5 left-5 right-5 bg-slate-900/90 backdrop-blur-md border border-slate-700/60 rounded-2xl p-4 flex items-center justify-between">
+              <div className="absolute bottom-5 left-5 right-5 bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-2xl p-4 flex items-center justify-between">
                 <div>
-                  <div className="flex items-center gap-1 text-amber-400 text-xs font-bold">
+                  <div className="flex items-center gap-1 text-amber-400 text-xs font-semibold">
                     <Star className="w-3.5 h-3.5 fill-amber-400" />
                     <span>4.9 Rating</span>
                     <span className="text-slate-500">•</span>
                     <span className="text-slate-300">50,000+ Completed Rides</span>
                   </div>
                   <span className="text-[11px] text-slate-400 mt-0.5 block">
-                    1,200+ Verified Tamil Nadu Auto Pilots
+                    450+ Verified Tirunelveli (TN 72) Auto Pilots
                   </span>
                 </div>
                 <div className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
@@ -322,10 +333,10 @@ export const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto space-y-10">
           <div className="max-w-xl space-y-2">
             <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">
-              Core Standards
+              Tirunelveli Standards
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              A fair mobility service built for our towns and cities.
+              A fair mobility service built exclusively for Tirunelveli City.
             </h2>
           </div>
 
@@ -336,7 +347,7 @@ export const LandingPage: React.FC = () => {
               </div>
               <h3 className="font-bold text-base text-white">0% Surge Pricing</h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Standard government meter pricing (₹35 base, ₹15/km). Fares stay consistent regardless of rain or rush hour.
+                Standard government meter pricing (₹35 base, ₹15/km). Fares stay consistent regardless of rain, festival crowds, or peak hours.
               </p>
             </div>
 
@@ -344,9 +355,9 @@ export const LandingPage: React.FC = () => {
               <div className="w-10 h-10 rounded-xl bg-slate-800 text-emerald-400 flex items-center justify-center">
                 <ShieldCheck className="w-5 h-5" />
               </div>
-              <h3 className="font-bold text-base text-white">Verified Local Pilots</h3>
+              <h3 className="font-bold text-base text-white">Verified TN 72 Pilots</h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Every driver holds a valid Tamil Nadu commercial PSV badge, RTO fitness certificate, and police background clearance.
+                Every pilot is a local native driver with a valid commercial PSV badge, RTO fitness certificate, and police background clearance.
               </p>
             </div>
 
@@ -356,7 +367,7 @@ export const LandingPage: React.FC = () => {
               </div>
               <h3 className="font-bold text-base text-white">Direct Cash &amp; UPI</h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Pay your pilot directly using Google Pay, PhonePe, or cash. No wallet holds or delayed weekly payouts.
+                Pay your Tirunelveli auto pilot directly via Google Pay, PhonePe, Paytm, or cash. Zero commission deducted from drivers.
               </p>
             </div>
 
@@ -366,7 +377,7 @@ export const LandingPage: React.FC = () => {
               </div>
               <h3 className="font-bold text-base text-white">Live Route &amp; SOS</h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Track your ride live on GPS and share your journey with family over WhatsApp. 24x7 local support desk.
+                Track your ride live on GPS across Tirunelveli, share trips with family over WhatsApp, and reach local safety support 24x7.
               </p>
             </div>
           </div>
@@ -383,11 +394,11 @@ export const LandingPage: React.FC = () => {
               Vehicle Options
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              Our Tamil Nadu Auto Fleet
+              Our Tirunelveli Auto Fleet
             </h2>
           </div>
           <span className="text-xs text-slate-400">
-            Regulated under Section 66 of Motor Vehicles Act, 1988
+            Regulated under Section 66 of Motor Vehicles Act, 1988 &amp; TN RTO Norms
           </span>
         </div>
 
@@ -440,7 +451,7 @@ export const LandingPage: React.FC = () => {
                 </div>
                 <button
                   onClick={handleBookNow}
-                  className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-colors flex items-center gap-1 cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-semibold text-xs transition-colors flex items-center gap-1 cursor-pointer shadow-sm"
                 >
                   <span>Book Ride</span>
                   <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -458,27 +469,27 @@ export const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto bg-[#101522] border border-slate-800 rounded-3xl p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="space-y-3 max-w-xl">
             <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider block">
-              Driver Partner Network
+              Tirunelveli Auto Partner Network
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              Drive with Dad's Fleet &amp; keep 100% of your earnings.
+              Drive with Dad's Fleet in Tirunelveli &amp; keep 100% of your earnings.
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Zero commission deductions. Direct passenger UPI and cash payments into your hand. Complete registration online in 5 minutes with your Driving Licence and Auto Photo.
+              Zero commission deductions. Direct passenger UPI and cash payments into your hand. Register in 5 minutes with your Driving Licence and TN 72 Auto details.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
             <button
               onClick={() => navigate('/driver/register')}
-              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-semibold text-xs sm:text-sm transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
               <span>Register as Partner</span>
               <ArrowRight className="w-4 h-4 stroke-[2.5]" />
             </button>
             <button
               onClick={() => navigate('/driver/login')}
-              className="w-full sm:w-auto px-5 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-xs sm:text-sm transition-colors text-center cursor-pointer"
+              className="w-full sm:w-auto px-5 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 font-medium text-xs sm:text-sm transition-colors text-center cursor-pointer"
             >
               <span>Pilot Login</span>
             </button>
@@ -494,15 +505,15 @@ export const LandingPage: React.FC = () => {
           {/* Passenger App */}
           <div className="bg-[#101520] border border-slate-800/80 rounded-2xl p-6 space-y-3 flex flex-col justify-between">
             <div className="space-y-1">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Passenger Portal</span>
-              <h4 className="text-base font-bold text-white">Customer Booking</h4>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Tirunelveli Portal</span>
+              <h4 className="text-base font-bold text-white">Passenger Booking</h4>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Book certified local autos across Tamil Nadu with zero surge pricing and live GPS tracking.
+                Book certified local autos across Tirunelveli corporation with zero surge pricing and live GPS tracking.
               </p>
             </div>
             <button
               onClick={() => navigate('/app')}
-              className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              className="w-full py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
             >
               <span>Open Passenger App</span>
               <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -512,22 +523,22 @@ export const LandingPage: React.FC = () => {
           {/* Driver App */}
           <div className="bg-[#101520] border border-slate-800/80 rounded-2xl p-6 space-y-3 flex flex-col justify-between">
             <div className="space-y-1">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Driver Partner</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">TN 72 Driver Desk</span>
               <h4 className="text-base font-bold text-white">Pilot Operations</h4>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Duty map, passenger dispatch requests, daily earnings, and direct UPI settlements.
+                Tirunelveli town duty map, passenger dispatch requests, daily earnings, and direct UPI settlements.
               </p>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => navigate('/driver/login')}
-                className="flex-1 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white border border-slate-700 font-semibold text-xs transition-colors text-center cursor-pointer"
+                className="flex-1 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white border border-slate-800 font-medium text-xs transition-colors text-center cursor-pointer"
               >
                 Sign In
               </button>
               <button
                 onClick={() => navigate('/driver/register')}
-                className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-colors text-center cursor-pointer"
+                className="flex-1 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-semibold text-xs transition-colors text-center cursor-pointer"
               >
                 Register
               </button>
@@ -538,14 +549,14 @@ export const LandingPage: React.FC = () => {
           <div className="bg-[#101520] border border-slate-800/80 rounded-2xl p-6 space-y-3 flex flex-col justify-between">
             <div className="space-y-1">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Business Management</span>
-              <h4 className="text-base font-bold text-white">Central Fleet HQ</h4>
+              <h4 className="text-base font-bold text-white">Tirunelveli Fleet HQ</h4>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Owner command center for fleet dispatch, driver verification, fare rules, and revenue analytics.
+                Central command desk for local auto dispatch, driver verification, meter fare rules, and revenue analytics.
               </p>
             </div>
             <button
               onClick={() => navigate('/admin/login')}
-              className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 font-medium text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <span>Admin HQ Login</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -559,10 +570,10 @@ export const LandingPage: React.FC = () => {
       {/* ------------------------------------------------------------------ */}
       <footer className="border-t border-slate-800/80 bg-[#070A0F] py-8 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© 2026 Dad's Auto &amp; Cab. All rights reserved. Proudly Serving Tamil Nadu.</p>
+          <p>© 2026 Dad's Auto &amp; Cab. Dedicated Inter-City Auto Fleet for Tirunelveli, Tamil Nadu.</p>
           <div className="flex items-center gap-6 text-slate-400">
-            <span>Section 66 MVA Compliant</span>
-            <span>24x7 Support: 94431 87654</span>
+            <span>TN 72 Motor Vehicles Act Compliant</span>
+            <span>Local Helpline: 94431 87654</span>
           </div>
         </div>
       </footer>

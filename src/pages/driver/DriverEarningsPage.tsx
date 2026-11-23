@@ -46,7 +46,7 @@ export const DriverEarningsPage: React.FC = () => {
       </div>
 
       {/* Main Total Balance Card */}
-      <div className="bg-gradient-to-br from-slate-900 to-slate-950 p-6 rounded-3xl border-2 border-amber-500/40 shadow-glow-yellow space-y-4">
+      <div className="bg-gradient-to-br from-[#101520] to-[#0A0E14] p-6 rounded-3xl border border-slate-800 shadow-xl ring-1 ring-white/[0.03] space-y-4">
         <div className="flex items-center justify-between">
           <span className="text-xs text-slate-400 uppercase font-semibold">
             Current Available Payout
@@ -106,7 +106,7 @@ export const DriverEarningsPage: React.FC = () => {
                   style={{ height: `${heightPercent}%` }}
                   className={`w-full max-w-[28px] rounded-t-lg transition-all duration-500 ${
                     idx === weeklyData.length - 1
-                      ? 'bg-amber-500 shadow-glow-yellow'
+                      ? 'bg-amber-400 shadow-sm'
                       : 'bg-slate-800 hover:bg-slate-700'
                   }`}
                 />

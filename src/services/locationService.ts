@@ -1,35 +1,41 @@
 import { TNLocation, RouteInfo } from '../types';
 
 /**
- * TAMIL NADU BOUNDING BOX
- * Lat: 8.05° N (Kanyakumari) to 13.55° N (Tiruvallur / Chennai border)
- * Lng: 76.20° E (Nilgiris / Coimbatore border) to 80.35° E (Chennai / Point Calimere)
+ * TIRUNELVELI CITY BOUNDING BOX
+ * Lat: 8.66° N to 8.78° N
+ * Lng: 77.65° E to 77.82° E
  */
-export const TAMIL_NADU_BOUNDS = {
-  north: 13.55,
-  south: 8.05,
-  west: 76.20,
-  east: 80.35,
+export const TIRUNELVELI_BOUNDS = {
+  north: 8.78,
+  south: 8.66,
+  west: 77.65,
+  east: 77.82,
 };
 
-export function isWithinTamilNadu(lat: number, lng: number): boolean {
+export const TAMIL_NADU_BOUNDS = TIRUNELVELI_BOUNDS;
+
+export function isWithinTirunelveli(lat: number, lng: number): boolean {
   return (
-    lat >= TAMIL_NADU_BOUNDS.south &&
-    lat <= TAMIL_NADU_BOUNDS.north &&
-    lng >= TAMIL_NADU_BOUNDS.west &&
-    lng <= TAMIL_NADU_BOUNDS.east
+    lat >= TIRUNELVELI_BOUNDS.south &&
+    lat <= TIRUNELVELI_BOUNDS.north &&
+    lng >= TIRUNELVELI_BOUNDS.west &&
+    lng <= TIRUNELVELI_BOUNDS.east
   );
 }
 
+export function isWithinTamilNadu(lat: number, lng: number): boolean {
+  return isWithinTirunelveli(lat, lng);
+}
+
 /**
- * Curated Tamil Nadu Locations database (covering all major hubs, junctions, bus stands, and airports)
+ * Curated Tirunelveli Inter-City Locations database
+ * Covering all major hubs, bus stands, railway junctions, temples, hospitals, colleges & neighborhoods
  */
-export const TAMIL_NADU_LOCATIONS: TNLocation[] = [
-  // Tirunelveli & South TN (Primary Demo Region)
+export const TIRUNELVELI_LOCATIONS: TNLocation[] = [
   {
-    id: 'tn-tvl-01',
+    id: 'tvl-01',
     name: 'Palayamkottai Bus Stand',
-    address: 'Palayamkottai, Tirunelveli, Tamil Nadu 627002',
+    address: 'Palayamkottai Main Road, Tirunelveli 627002',
     district: 'Tirunelveli',
     lat: 8.7180,
     lng: 77.7420,
@@ -37,9 +43,9 @@ export const TAMIL_NADU_LOCATIONS: TNLocation[] = [
     popular: true,
   },
   {
-    id: 'tn-tvl-02',
+    id: 'tvl-02',
     name: 'Tirunelveli Junction Railway Station',
-    address: 'Railway Feeder Rd, Tirunelveli Junction, Tamil Nadu 627001',
+    address: 'Railway Feeder Rd, Tirunelveli Junction 627001',
     district: 'Tirunelveli',
     lat: 8.7290,
     lng: 77.7080,
@@ -47,8 +53,28 @@ export const TAMIL_NADU_LOCATIONS: TNLocation[] = [
     popular: true,
   },
   {
-    id: 'tn-tvl-03',
-    name: 'Vannarpettai',
+    id: 'tvl-03',
+    name: 'Nellaiappar Temple (East Car St, Town)',
+    address: 'East Car Street, Tirunelveli Town 627006',
+    district: 'Tirunelveli',
+    lat: 8.7275,
+    lng: 77.6980,
+    category: 'temple',
+    popular: true,
+  },
+  {
+    id: 'tvl-04',
+    name: 'Tirunelveli New Bus Stand (Veinthaankulam)',
+    address: 'KTC Nagar, V.M. Chatram, Tirunelveli 627011',
+    district: 'Tirunelveli',
+    lat: 8.7042,
+    lng: 77.7554,
+    category: 'bus_stand',
+    popular: true,
+  },
+  {
+    id: 'tvl-05',
+    name: 'Vannarpettai Roundana & Bypass',
     address: 'South Bypass Road, Vannarpettai, Tirunelveli 627003',
     district: 'Tirunelveli',
     lat: 8.7245,
@@ -57,315 +83,142 @@ export const TAMIL_NADU_LOCATIONS: TNLocation[] = [
     popular: true,
   },
   {
-    id: 'tn-tvl-04',
-    name: 'Nellaiappar Temple East Car St',
-    address: 'Town, Tirunelveli, Tamil Nadu 627006',
+    id: 'tvl-06',
+    name: 'Melapalayam Main Bazaar',
+    address: 'Hameempuram, Melapalayam, Tirunelveli 627005',
     district: 'Tirunelveli',
-    lat: 8.7275,
-    lng: 77.6980,
-    category: 'temple',
+    lat: 8.7090,
+    lng: 77.7290,
+    category: 'commercial',
     popular: true,
   },
   {
-    id: 'tn-tvl-05',
-    name: 'Tirunelveli New Bus Stand (BSNL)',
-    address: 'KTC Nagar, V.M. Chatram, Tirunelveli 627011',
+    id: 'tvl-07',
+    name: 'Tirunelveli Medical College Hospital (High Ground)',
+    address: 'High Ground Rd, Palayamkottai, Tirunelveli 627011',
     district: 'Tirunelveli',
-    lat: 8.7042,
-    lng: 77.7554,
-    category: 'bus_stand',
-  },
-
-  // Chennai
-  {
-    id: 'tn-chn-01',
-    name: 'Puratchi Thalaivar Dr. M.G.R Central Station',
-    address: 'Kannappar Thidal, Periyamet, Chennai 600003',
-    district: 'Chennai',
-    lat: 13.0827,
-    lng: 80.2707,
-    category: 'railway',
+    lat: 8.7120,
+    lng: 77.7510,
+    category: 'hospital',
     popular: true,
   },
   {
-    id: 'tn-chn-02',
-    name: 'Koyambedu CMBT Bus Terminus',
-    address: 'Jawaharlal Nehru Rd, Koyambedu, Chennai 600107',
-    district: 'Chennai',
-    lat: 13.0694,
-    lng: 80.2038,
-    category: 'bus_stand',
-    popular: true,
-  },
-  {
-    id: 'tn-chn-03',
-    name: 'Chennai International Airport (MAA)',
-    address: 'GST Road, Meenambakkam, Chennai 600027',
-    district: 'Chennai',
-    lat: 12.9941,
-    lng: 80.1709,
-    category: 'airport',
-    popular: true,
-  },
-  {
-    id: 'tn-chn-04',
-    name: 'T. Nagar (Panagal Park)',
-    address: 'Prakasam Road, T. Nagar, Chennai 600017',
-    district: 'Chennai',
-    lat: 13.0418,
-    lng: 80.2341,
+    id: 'tvl-08',
+    name: 'Pettai Market & Industrial Estate',
+    address: 'Cheranmahadevi Road, Pettai, Tirunelveli 627010',
+    district: 'Tirunelveli',
+    lat: 8.7360,
+    lng: 77.6690,
     category: 'commercial',
     popular: true,
   },
   {
-    id: 'tn-chn-05',
-    name: 'Anna Nagar Roundtana',
-    address: '2nd Avenue, Anna Nagar, Chennai 600040',
-    district: 'Chennai',
-    lat: 13.0850,
-    lng: 80.2101,
-    category: 'commercial',
-    popular: true,
-  },
-
-  // Coimbatore
-  {
-    id: 'tn-cbe-01',
-    name: 'Gandhipuram Central Bus Stand',
-    address: 'Cross Cut Rd, Gandhipuram, Coimbatore 641012',
-    district: 'Coimbatore',
-    lat: 11.0168,
-    lng: 76.9678,
-    category: 'bus_stand',
-    popular: true,
-  },
-  {
-    id: 'tn-cbe-02',
-    name: 'Coimbatore Junction Railway Station',
-    address: 'Railway Station Road, Gopalapuram, Coimbatore 641018',
-    district: 'Coimbatore',
-    lat: 10.9964,
-    lng: 76.9674,
-    category: 'railway',
-    popular: true,
-  },
-  {
-    id: 'tn-cbe-03',
-    name: 'Coimbatore International Airport',
-    address: 'Airport Rd, Peelamedu, Coimbatore 641014',
-    district: 'Coimbatore',
-    lat: 11.0298,
-    lng: 77.0434,
-    category: 'airport',
-    popular: true,
-  },
-  {
-    id: 'tn-cbe-04',
-    name: 'RS Puram Post Office Road',
-    address: 'R.S. Puram West, Coimbatore 641002',
-    district: 'Coimbatore',
-    lat: 11.0089,
-    lng: 76.9482,
-    category: 'commercial',
-  },
-
-  // Madurai
-  {
-    id: 'tn-mdu-01',
-    name: 'Meenakshi Amman Temple (South Tower)',
-    address: 'Madurai Main, Madurai 625001',
-    district: 'Madurai',
-    lat: 9.9195,
-    lng: 78.1193,
-    category: 'temple',
-    popular: true,
-  },
-  {
-    id: 'tn-mdu-02',
-    name: 'Madurai Junction Railway Station',
-    address: 'Railway Colony, Madurai 625001',
-    district: 'Madurai',
-    lat: 9.9252,
-    lng: 78.1118,
-    category: 'railway',
-    popular: true,
-  },
-  {
-    id: 'tn-mdu-03',
-    name: 'Mattuthavani Integrated Bus Terminus',
-    address: 'Melur Main Road, Mattuthavani, Madurai 625007',
-    district: 'Madurai',
-    lat: 9.9472,
-    lng: 78.1565,
-    category: 'bus_stand',
-    popular: true,
-  },
-
-  // Tiruchirappalli (Trichy)
-  {
-    id: 'tn-try-01',
-    name: 'Tiruchirappalli Junction Railway Station',
-    address: 'Bharathiyar Salai, Cantonment, Trichy 620001',
-    district: 'Tiruchirappalli',
-    lat: 10.7937,
-    lng: 78.6860,
-    category: 'railway',
-    popular: true,
-  },
-  {
-    id: 'tn-try-02',
-    name: 'Central Bus Stand Trichy',
-    address: 'Cantonment, Tiruchirappalli 620001',
-    district: 'Tiruchirappalli',
-    lat: 10.7960,
-    lng: 78.6872,
-    category: 'bus_stand',
-    popular: true,
-  },
-  {
-    id: 'tn-try-03',
-    name: 'Srirangam Ranganathaswamy Temple',
-    address: 'Srirangam, Tiruchirappalli 620006',
-    district: 'Tiruchirappalli',
-    lat: 10.8624,
-    lng: 78.6902,
-    category: 'temple',
-    popular: true,
-  },
-
-  // Salem
-  {
-    id: 'tn-slm-01',
-    name: 'Salem New Bus Stand',
-    address: 'Meyyanur Bypass, Salem 636004',
-    district: 'Salem',
-    lat: 11.6643,
-    lng: 78.1460,
-    category: 'bus_stand',
-    popular: true,
-  },
-  {
-    id: 'tn-slm-02',
-    name: 'Salem Junction Railway Station',
-    address: 'Suramangalam, Salem 636005',
-    district: 'Salem',
-    lat: 11.6738,
-    lng: 78.1189,
-    category: 'railway',
-  },
-
-  // Thoothukudi (Tuticorin)
-  {
-    id: 'tn-tut-01',
-    name: 'Thoothukudi Old Bus Stand',
-    address: 'Palayamkottai Rd, Thoothukudi 628002',
-    district: 'Thoothukudi',
-    lat: 8.8053,
-    lng: 78.1492,
-    category: 'bus_stand',
-    popular: true,
-  },
-  {
-    id: 'tn-tut-02',
-    name: 'V.O.C Port Trust Harbor',
-    address: 'Harbour Estate, Thoothukudi 628004',
-    district: 'Thoothukudi',
+    id: 'tvl-09',
+    name: 'Thatchanallur Market & By-pass',
+    address: 'Madurai Road, Thatchanallur, Tirunelveli 627002',
+    district: 'Tirunelveli',
     lat: 8.7490,
-    lng: 78.1880,
+    lng: 77.7180,
     category: 'commercial',
-  },
-
-  // Nagercoil & Kanyakumari
-  {
-    id: 'tn-ngl-01',
-    name: 'Nagercoil Vadasery Bus Stand',
-    address: 'Vadasery, Nagercoil 629001',
-    district: 'Kanyakumari',
-    lat: 8.1833,
-    lng: 77.4267,
-    category: 'bus_stand',
     popular: true,
   },
   {
-    id: 'tn-ngl-02',
-    name: 'Kanyakumari Sunset Point & Memorial',
-    address: 'Beach Rd, Kanyakumari 629702',
-    district: 'Kanyakumari',
-    lat: 8.0780,
-    lng: 77.5550,
-    category: 'temple',
-    popular: true,
-  },
-
-  // Erode, Vellore, Thanjavur, Dindigul
-  {
-    id: 'tn-erd-01',
-    name: 'Erode Central Bus Stand',
-    address: 'Brough Rd, Erode 638001',
-    district: 'Erode',
-    lat: 11.3410,
-    lng: 77.7172,
-    category: 'bus_stand',
-  },
-  {
-    id: 'tn-vel-01',
-    name: 'Vellore New Bus Stand (Green Circle)',
-    address: 'Katpadi Rd, Vellore 632004',
-    district: 'Vellore',
-    lat: 12.9246,
-    lng: 79.1350,
-    category: 'bus_stand',
-  },
-  {
-    id: 'tn-tanj-01',
-    name: 'Thanjavur Brihadisvara Temple (Big Temple)',
-    address: 'Membalam Rd, Balaganapathy Nagar, Thanjavur 613007',
-    district: 'Thanjavur',
-    lat: 10.7828,
-    lng: 79.1318,
-    category: 'temple',
-    popular: true,
-  },
-  {
-    id: 'tn-din-01',
-    name: 'Dindigul Rock Fort & Clock Tower',
-    address: 'Main Bazaar, Dindigul 624001',
-    district: 'Dindigul',
-    lat: 10.3624,
-    lng: 77.9695,
+    id: 'tvl-10',
+    name: 'District Collectorate & Court (Kokkirakulam)',
+    address: 'Collectorate Rd, Kokkirakulam, Tirunelveli 627009',
+    district: 'Tirunelveli',
+    lat: 8.7260,
+    lng: 77.7190,
     category: 'commercial',
+    popular: false,
   },
   {
-    id: 'tn-vnr-01',
-    name: 'Virudhunagar Old Bus Stand',
-    address: 'Madurai Road, Virudhunagar 626001',
-    district: 'Virudhunagar',
-    lat: 9.5872,
-    lng: 77.9575,
-    category: 'bus_stand',
+    id: 'tvl-11',
+    name: 'Perumalpuram (Main Road)',
+    address: 'Perumalpuram Colony, Tirunelveli 627007',
+    district: 'Tirunelveli',
+    lat: 8.7010,
+    lng: 77.7410,
+    category: 'residential',
+    popular: false,
   },
   {
-    id: 'tn-tpr-01',
-    name: 'Tiruppur Old Bus Stand',
-    address: 'Kamraj Rd, Tiruppur 641604',
-    district: 'Tiruppur',
-    lat: 11.1085,
-    lng: 77.3411,
-    category: 'bus_stand',
+    id: 'tvl-12',
+    name: 'Maharajanagar & St. Xavier’s Colony',
+    address: 'Maharajanagar Post, Tirunelveli 627011',
+    district: 'Tirunelveli',
+    lat: 8.7085,
+    lng: 77.7610,
+    category: 'residential',
+    popular: false,
   },
   {
-    id: 'tn-kch-01',
-    name: 'Kanchipuram Kamakshi Amman Temple',
-    address: 'New St, Kanchipuram 631502',
-    district: 'Kanchipuram',
-    lat: 12.8406,
-    lng: 79.7032,
-    category: 'temple',
-  }
+    id: 'tvl-13',
+    name: 'Samathanapuram & V.M. Chatram',
+    address: 'Samathanapuram, Palayamkottai, Tirunelveli 627002',
+    district: 'Tirunelveli',
+    lat: 8.7140,
+    lng: 77.7370,
+    category: 'residential',
+    popular: false,
+  },
+  {
+    id: 'tvl-14',
+    name: 'St. Xavier’s College Campus',
+    address: 'College Road, Palayamkottai, Tirunelveli 627002',
+    district: 'Tirunelveli',
+    lat: 8.7195,
+    lng: 77.7480,
+    category: 'college',
+    popular: false,
+  },
+  {
+    id: 'tvl-15',
+    name: 'Sarah Tucker College Campus',
+    address: 'Sarah Tucker College Rd, Palayamkottai, Tirunelveli 627007',
+    district: 'Tirunelveli',
+    lat: 8.7155,
+    lng: 77.7445,
+    category: 'college',
+    popular: false,
+  },
+  {
+    id: 'tvl-16',
+    name: 'Anna Stadium & VOC Ground',
+    address: 'VOC Ground Road, Palayamkottai, Tirunelveli 627002',
+    district: 'Tirunelveli',
+    lat: 8.7210,
+    lng: 77.7390,
+    category: 'commercial',
+    popular: false,
+  },
+  {
+    id: 'tvl-17',
+    name: 'MDT Hindu College',
+    address: 'Cheranmahadevi Rd, Pettai, Tirunelveli 627010',
+    district: 'Tirunelveli',
+    lat: 8.7390,
+    lng: 77.6620,
+    category: 'college',
+    popular: false,
+  },
+  {
+    id: 'tvl-18',
+    name: 'Reddiarpatti Hill View Area',
+    address: 'Reddiarpatti Main Road, Tirunelveli 627007',
+    district: 'Tirunelveli',
+    lat: 8.6850,
+    lng: 77.7380,
+    category: 'residential',
+    popular: false,
+  },
 ];
 
+// Alias for compatibility
+export const TAMIL_NADU_LOCATIONS: TNLocation[] = TIRUNELVELI_LOCATIONS;
+
 /**
- * Great-circle distance between two coordinates in kilometers (Haversine formula)
+ * Haversine formula to compute distance in km between two lat/lng coordinates
  */
 export function calculateHaversineDistance(
   lat1: number,
@@ -387,14 +240,14 @@ export function calculateHaversineDistance(
 }
 
 /**
- * Calculates realistic road travel distance & duration within Tamil Nadu
- * In town routes (e.g. Palayamkottai to Junction): 6.8 km, ~15 mins
+ * Calculates realistic road travel distance & duration within Tirunelveli Inter-City
+ * Benchmark route: Palayamkottai to Tirunelveli Junction: 6.8 km, ~15 mins
  */
 export function calculateRoute(
   pickup: TNLocation,
   destination: TNLocation
 ): RouteInfo {
-  // Check if this is the benchmark example route: Palayamkottai -> Tirunelveli Junction
+  // Check if benchmark route: Palayamkottai <-> Tirunelveli Junction
   const isPalayamkottaiToJunction =
     (pickup.name.includes('Palayamkottai') && destination.name.includes('Junction')) ||
     (pickup.name.includes('Junction') && destination.name.includes('Palayamkottai'));
@@ -413,12 +266,12 @@ export function calculateRoute(
       destination.lng
     );
 
-    // Apply road winding factor (1.28x)
-    distanceKm = Math.max(1.2, parseFloat((rawDistance * 1.28).toFixed(1)));
+    // Realistic road winding factor for Tirunelveli streets (1.32x)
+    distanceKm = Math.max(1.5, parseFloat((rawDistance * 1.32).toFixed(1)));
 
-    // Urban vs Highway speed estimation
-    const avgSpeedKmH = distanceKm < 15 ? 26 : 48; // km/h
-    durationMinutes = Math.max(5, Math.round((distanceKm / avgSpeedKmH) * 60));
+    // Urban city speed estimation (~24-28 km/h)
+    const avgSpeedKmH = 26;
+    durationMinutes = Math.max(6, Math.round((distanceKm / avgSpeedKmH) * 60));
   }
 
   // Generate realistic curved polyline points between pickup & destination
@@ -451,8 +304,7 @@ function generateCurvedPolyline(
 
   for (let i = 1; i < segments; i++) {
     const fraction = i / segments;
-    // Introduce slight road curvature perpendicular to the line
-    const offset = Math.sin(fraction * Math.PI) * 0.0035 * ((i % 2 === 0) ? 1 : -0.7);
+    const offset = Math.sin(fraction * Math.PI) * 0.0035 * (i % 2 === 0 ? 1 : -0.7);
     const lat = start[0] + deltaLat * fraction + offset;
     const lng = start[1] + deltaLng * fraction - offset * 0.5;
     points.push([lat, lng]);
@@ -463,16 +315,20 @@ function generateCurvedPolyline(
 }
 
 /**
- * Search locations within Tamil Nadu
+ * Search locations within Tirunelveli Inter-City
  */
 export function searchTNLocations(query: string): TNLocation[] {
   const q = query.trim().toLowerCase();
-  if (!q) return TAMIL_NADU_LOCATIONS.slice(0, 8);
+  if (!q) return TIRUNELVELI_LOCATIONS.slice(0, 8);
 
-  return TAMIL_NADU_LOCATIONS.filter(
+  return TIRUNELVELI_LOCATIONS.filter(
     (loc) =>
       loc.name.toLowerCase().includes(q) ||
       loc.address.toLowerCase().includes(q) ||
       loc.district.toLowerCase().includes(q)
   );
+}
+
+export function searchTirunelveliLocations(query: string): TNLocation[] {
+  return searchTNLocations(query);
 }

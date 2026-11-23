@@ -24,8 +24,8 @@ export const TRANSLATIONS: Translations = {
     ta: 'உங்கள் பயணம், எங்கள் முன்னுரிமை.',
   },
   'brand.servingTN': {
-    en: 'Proudly Serving Tamil Nadu',
-    ta: 'பெருமையுடன் தமிழ்நாட்டில் சேவை செய்கிறோம்',
+    en: 'Proudly Serving Tirunelveli',
+    ta: 'பெருமையுடன் திருநெல்வேலியில் சேவை செய்கிறோம்',
   },
 
   // Navigation
@@ -43,7 +43,7 @@ export const TRANSLATIONS: Translations = {
   'home.destination': { en: 'Enter Destination', ta: 'சேருமிடம் தேர்வு செய்க' },
   'home.quickSaved': { en: 'Saved Places', ta: 'சேமிக்கப்பட்ட இடங்கள்' },
   'home.recent': { en: 'Recent Places', ta: 'சமீபத்திய இடங்கள்' },
-  'home.searchPlaceholder': { en: 'Search pickup or destination in Tamil Nadu...', ta: 'தமிழ்நாட்டு இடங்களை தேடுங்கள்...' },
+  'home.searchPlaceholder': { en: 'Search pickup or destination in Tirunelveli...', ta: 'திருநெல்வேலி இடங்களை தேடுங்கள்...' },
 
   // Ride Types
   'ride.auto': { en: 'Auto Rickshaw', ta: 'ஆட்டோ' },
@@ -80,7 +80,7 @@ export const TRANSLATIONS: Translations = {
   // Driver
   'driver.online': { en: 'ONLINE', ta: 'ஆன்லைன்' },
   'driver.offline': { en: 'OFFLINE', ta: 'ஆஃப்லைன்' },
-  'driver.ready': { en: 'Ready to take passengers across Tamil Nadu', ta: 'பயணிகளை ஏற்றிச் செல்ல தயாராக உள்ளது' },
+  'driver.ready': { en: 'Ready to take passengers across Tirunelveli City', ta: 'திருநெல்வேலி பயணிகளை ஏற்றிச் செல்ல தயாராக உள்ளது' },
   'driver.offDuty': { en: 'You are currently off duty. Go online to accept rides.', ta: 'தற்போது ஆஃப்லைனில் உள்ளீர்கள்.' },
   'driver.rideRequest': { en: 'New Ride Request!', ta: 'புதிய சவாரி கோரிக்கை!' },
   'driver.acceptRide': { en: 'Accept Ride', ta: 'சவாரியை ஏற்கவும்' },

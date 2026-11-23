@@ -99,7 +99,7 @@ export interface TNLocation {
   district: string;
   lat: number;
   lng: number;
-  category?: 'railway' | 'bus_stand' | 'temple' | 'airport' | 'hospital' | 'commercial' | 'residential';
+  category?: 'railway' | 'bus_stand' | 'temple' | 'airport' | 'hospital' | 'commercial' | 'residential' | 'college';
   popular?: boolean;
 }
 
